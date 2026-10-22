@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#102b46"><title>Orçamento de Bebidas | Gestão</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">OB</div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
+    <div class="nav-label">MENU PRINCIPAL</div>
+    <nav id="mainNav">
+      <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" data-page="lancamentos"><span>▤</span> Lançamentos</button>
+      <button class="nav-item" data-page="orcamento"><span>◫</span> Orçamento mensal</button>
+      <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
+      <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Área de trabalho</b><small>Dados salvos neste navegador</small></div></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
+    <section class="page" id="page-dashboard">
+      <div class="page-heading"><div><p class="eyebrow">VISÃO GERAL</p><h1>Dashboard</h1><p class="subheading">Acompanhe seu orçamento e os compromissos de bebidas.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="yearFilter"><option>2026</option><option>2027</option><option>2028</option></select></label></div></div>
+      <div class="metric-grid">
+        <article class="metric-card"><div class="metric-top"><span>Orçamento anual</span><span class="metric-icon blue">▣</span></div><strong id="mBudget">R$ 0,00</strong><small>Limite configurado para o ano</small></article>
+        <article class="metric-card"><div class="metric-top"><span>Total comprometido</span><span class="metric-icon purple">↗</span></div><strong id="mSpent">R$ 0,00</strong><small id="mSpentNote">Lançamentos do ano</small></article>
+        <article class="metric-card"><div class="metric-top"><span>Saldo disponível</span><span class="metric-icon green">⌁</span></div><strong id="mBalance">R$ 0,00</strong><small>Orçamento menos compromissos</small></article>
+        <article class="metric-card"><div class="metric-top"><span>Em aberto</span><span class="metric-icon orange">◷</span></div><strong id="mOpen">R$ 0,00</strong><small id="mOpenNote">Contas pendentes</small></article>
+      </div>
+      <div class="content-grid charts-grid">
+        <article class="panel chart-panel"><div class="panel-heading"><div><h2>Orçamento x comprometido</h2><p>Visão mensal do ano selecionado</p></div><span class="pill">12 meses</span></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div></article>
+        <article class="panel chart-panel"><div class="panel-heading"><div><h2>Gastos por categoria</h2><p>Distribuição dos lançamentos</p></div></div><div class="chart-wrap doughnut-wrap"><canvas id="categoryChart"></canvas></div><div id="categoryLegend" class="category-legend"></div></article>
+      </div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Próximos vencimentos</h2><p>Contas com vencimento mais próximo</p></div><button class="btn btn-light" data-goto="lancamentos">Ver lançamentos →</button></div><div class="table-scroll"><table><thead><tr><th>Fornecedor</th><th>Nota fiscal</th><th>Categoria</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody id="upcomingBody"></tbody></table></div></article>
+    </section>
+    <section class="page hidden" id="page-lancamentos">
+      <div class="page-heading"><div><p class="eyebrow">CONTROLE DE CONTAS</p><h1>Lançamentos</h1><p class="subheading">Cadastre compras, notas fiscais, vencimentos e valores.</p></div><button class="btn btn-primary" id="newEntry">＋ Novo lançamento</button></div>
+      <div class="toolbar panel"><div class="searchbox"><span>⌕</span><input id="searchEntries" placeholder="Buscar fornecedor ou NF..."></div><select id="monthFilter"><option value="all">Todos os meses</option></select><select id="statusFilter"><option value="all">Todos os status</option><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select><select id="categoryFilter"><option value="all">Todas as categorias</option></select></div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Todos os lançamentos</h2><p id="entryCount">0 registros</p></div><button class="btn btn-light" id="exportCsv">Exportar CSV ↓</button></div><div class="table-scroll"><table><thead><tr><th>Compra</th><th>Vencimento</th><th>Fornecedor</th><th>NF</th><th>Categoria</th><th>Valor</th><th>Status</th><th></th></tr></thead><tbody id="entriesBody"></tbody></table></div></article>
+    </section>
+    <section class="page hidden" id="page-orcamento">
+      <div class="page-heading"><div><p class="eyebrow">PLANEJAMENTO</p><h1>Orçamento mensal</h1><p class="subheading">Defina o limite mensal e acompanhe o saldo disponível.</p></div><button class="btn btn-primary" id="saveBudget">Salvar orçamento</button></div>
+      <article class="panel budget-config"><div><label for="monthlyBudget">Orçamento-base mensal (R$)</label><p>O saldo não utilizado de um mês é somado ao orçamento-base do mês seguinte.</p></div><div class="budget-input"><span>R$</span><input type="number" min="0" step="0.01" id="monthlyBudget" value="90000"></div></article>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Resumo dos 12 meses</h2><p>Os valores são calculados a partir das datas de vencimento.</p></div></div><div class="table-scroll"><table><thead><tr><th>Mês</th><th>Orçamento disponível</th><th>Comprometido</th><th>Saldo</th><th>% utilizado</th><th>Progresso</th></tr></thead><tbody id="budgetBody"></tbody></table></div></article>
+    </section>
+    <section class="page hidden" id="page-categorias">
+      <div class="page-heading"><div><p class="eyebrow">COMPOSIÇÃO DOS GASTOS</p><h1>Análise por categoria</h1><p class="subheading">Compare despesas mensais entre grupos de bebidas.</p></div><label class="select-label">Ano <select id="categoryYear"><option>2026</option><option>2027</option><option>2028</option></select></label></div>
+      <div class="metric-grid compact-metrics" id="categoryCards"></div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Detalhamento mensal</h2><p>Valores agrupados pela categoria e mês de vencimento.</p></div><button class="btn btn-light" id="exportCategory">Exportar CSV ↓</button></div><div class="table-scroll"><table class="category-table"><thead id="categoryHead"></thead><tbody id="categoryBody"></tbody></table></div></article>
+    </section>
+    <section class="page hidden" id="page-relatorios">
+      <div class="page-heading"><div><p class="eyebrow">ACOMPANHAMENTO</p><h1>Relatórios</h1><p class="subheading">Consulte os totais e exporte seus dados para análise.</p></div></div>
+      <div class="report-actions"><article class="panel report-card"><div class="report-symbol">▤</div><h2>Relatório de lançamentos</h2><p>Baixe todos os registros cadastrados em formato CSV, compatível com Excel.</p><button class="btn btn-primary" id="reportEntries">Exportar lançamentos</button></article><article class="panel report-card"><div class="report-symbol">◫</div><h2>Resumo por categoria</h2><p>Exporte a matriz com os valores mensais de cada categoria.</p><button class="btn btn-primary" id="reportCategories">Exportar categorias</button></article><article class="panel report-card"><div class="report-symbol">⇧</div><h2>Cópia de segurança</h2><p>Exporte seus dados ou restaure uma cópia salva anteriormente.</p><button class="btn btn-primary" id="backupExport">Baixar backup</button><label class="btn btn-light file-label">Restaurar backup<input type="file" id="backupImport" accept="application/json"></label></article></div>
+      <article class="panel warning-panel"><strong>Importante sobre os dados</strong><p>Esta versão inicial salva os registros neste navegador. Para acessar os mesmos dados em vários aparelhos e compartilhar com outros usuários, será necessário conectar um banco de dados online.</p></article>
+    </section>
+  </main>
+</div>
+<div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" required></label><label>Data de vencimento<input type="date" id="dueDate" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body></html>
