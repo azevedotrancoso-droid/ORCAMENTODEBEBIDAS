@@ -14,7 +14,12 @@ Interface web responsiva inspirada na estrutura da planilha `ORÇAMENTO DE BEBID
 ## Começar
 Abra `index.html` em um navegador moderno. É possível publicar a pasta em um serviço de hospedagem estática, como GitHub Pages.
 
-## Observação importante sobre armazenamento
-Esta primeira versão usa `localStorage`: os dados ficam salvos no navegador/dispositivo em que forem cadastrados. Ela começa vazia e não importa os lançamentos do Excel. Para que os mesmos dados sejam compartilhados entre vários aparelhos/usuários, é necessário conectar um banco de dados online e configurar autenticação e regras de acesso.
+## Armazenamento
+Os dados ficam no Supabase (banco online), por conta de usuário, com login por e-mail e senha.
+Cada usuário só acessa os próprios registros (regras RLS). Funciona em qualquer aparelho com o mesmo login.
 
-O gráfico usa Chart.js por CDN, e as fontes usam Google Fonts. Para carregar esses recursos, o navegador precisa de conexão com a internet.
+## Publicar
+Envie `index.html`, `style.css`, `script.js` e `README.md` para a raiz do repositório (GitHub Pages).
+No Supabase, em Authentication > URL Configuration, informe o endereço do site em Site URL.
+
+O gráfico usa Chart.js e o banco usa supabase-js, ambos por CDN; o navegador precisa de internet.

@@ -5,9 +5,22 @@
   <meta name="theme-color" content="#102b46"><title>Orçamento de Bebidas | Gestão</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
 <body>
-<div class="app-shell">
+<div id="authView" class="auth-view hidden">
+  <form class="auth-card" id="authForm">
+    <div class="brand-mark">OB</div>
+    <h1>Orçamento de Bebidas</h1>
+    <p class="auth-sub" id="authSub">Entre para acessar seus lançamentos.</p>
+    <label>E-mail<input type="email" id="authEmail" autocomplete="email" required></label>
+    <label>Senha<input type="password" id="authPass" minlength="6" autocomplete="current-password" required></label>
+    <button class="btn btn-primary" type="submit" id="authSubmit">Entrar</button>
+    <button class="auth-link" type="button" id="authToggle">Não tem conta? Criar conta</button>
+    <p class="auth-msg" id="authMsg"></p>
+  </form>
+</div>
+<div class="app-shell hidden" id="appView">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="brand-mark">OB</div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
     <div class="nav-label">MENU PRINCIPAL</div>
@@ -18,7 +31,7 @@
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
     </nav>
-    <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Área de trabalho</b><small>Dados salvos neste navegador</small></div></div>
+    <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
   </aside>
   <main class="main-area">
     <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
@@ -54,7 +67,7 @@
     <section class="page hidden" id="page-relatorios">
       <div class="page-heading"><div><p class="eyebrow">ACOMPANHAMENTO</p><h1>Relatórios</h1><p class="subheading">Consulte os totais e exporte seus dados para análise.</p></div></div>
       <div class="report-actions"><article class="panel report-card"><div class="report-symbol">▤</div><h2>Relatório de lançamentos</h2><p>Baixe todos os registros cadastrados em formato CSV, compatível com Excel.</p><button class="btn btn-primary" id="reportEntries">Exportar lançamentos</button></article><article class="panel report-card"><div class="report-symbol">◫</div><h2>Resumo por categoria</h2><p>Exporte a matriz com os valores mensais de cada categoria.</p><button class="btn btn-primary" id="reportCategories">Exportar categorias</button></article><article class="panel report-card"><div class="report-symbol">⇧</div><h2>Cópia de segurança</h2><p>Exporte seus dados ou restaure uma cópia salva anteriormente.</p><button class="btn btn-primary" id="backupExport">Baixar backup</button><label class="btn btn-light file-label">Restaurar backup<input type="file" id="backupImport" accept="application/json"></label></article></div>
-      <article class="panel warning-panel"><strong>Importante sobre os dados</strong><p>Esta versão inicial salva os registros neste navegador. Para acessar os mesmos dados em vários aparelhos e compartilhar com outros usuários, será necessário conectar um banco de dados online.</p></article>
+      <article class="panel warning-panel"><strong>Importante sobre os dados</strong><p>Seus registros ficam salvos online na sua conta e podem ser acessados de qualquer aparelho com o mesmo login.</p></article>
     </section>
   </main>
 </div>
