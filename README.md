@@ -29,3 +29,6 @@ Os botões de exportação geram uma planilha .xlsx com 3 abas (Resumo, Lançame
 
 ## Baixa automática
 Notas cuja data de vencimento chegou passam sozinhas para PAGO: o Supabase faz isso todo dia às 00:05 (horário de Brasília) e o site também confere ao abrir.
+
+## Vários usuários
+Os dados pertencem a um "espaço de trabalho" do dono. Para dar acesso a outra pessoa, ela cria conta no site e depois se cadastra na tabela `orc_membros` do Supabase (user_id = id dela, dono_id = id do dono). Quem não está na tabela vê só os próprios dados (vazio).
