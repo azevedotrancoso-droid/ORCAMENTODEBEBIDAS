@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#102b46"><title>Orçamento de Bebidas | Gestão</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -53,7 +53,7 @@
     <section class="page hidden" id="page-lancamentos">
       <div class="page-heading"><div><p class="eyebrow">CONTROLE DE CONTAS</p><h1>Lançamentos</h1><p class="subheading">Cadastre compras, notas fiscais, vencimentos e valores.</p></div><button class="btn btn-primary" id="newEntry">＋ Novo lançamento</button></div>
       <div class="toolbar panel"><div class="searchbox"><span>⌕</span><input id="searchEntries" placeholder="Buscar fornecedor ou NF..."></div><select id="monthFilter"><option value="all">Todos os meses</option></select><select id="statusFilter"><option value="all">Todos os status</option><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select><select id="categoryFilter"><option value="all">Todas as categorias</option></select></div>
-      <article class="panel table-panel"><div class="panel-heading"><div><h2>Todos os lançamentos</h2><p id="entryCount">0 registros</p></div><button class="btn btn-light" id="exportCsv">Exportar CSV ↓</button></div><div class="table-scroll"><table><thead><tr><th>Compra</th><th>Vencimento</th><th>Fornecedor</th><th>NF</th><th>Categoria</th><th>Valor</th><th>Status</th><th></th></tr></thead><tbody id="entriesBody"></tbody></table></div></article>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Todos os lançamentos</h2><p id="entryCount">0 registros</p></div><button class="btn btn-light" id="exportCsv">Exportar Excel ↓</button></div><div class="table-scroll"><table><thead><tr><th>Compra</th><th>Vencimento</th><th>Fornecedor</th><th>NF</th><th>Categoria</th><th>Valor</th><th>Status</th><th></th></tr></thead><tbody id="entriesBody"></tbody></table></div></article>
     </section>
     <section class="page hidden" id="page-orcamento">
       <div class="page-heading"><div><p class="eyebrow">PLANEJAMENTO</p><h1>Orçamento mensal</h1><p class="subheading">Defina o orçamento-base e ajuste o valor de cada mês quando precisar.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="budgetYear"><option>2026</option><option>2027</option><option>2028</option></select></label><button class="btn btn-primary" id="saveBudget">Salvar orçamento-base</button></div></div>
@@ -63,18 +63,19 @@
     <section class="page hidden" id="page-categorias">
       <div class="page-heading"><div><p class="eyebrow">COMPOSIÇÃO DOS GASTOS</p><h1>Análise por categoria</h1><p class="subheading">Compare despesas mensais entre grupos de bebidas.</p></div><label class="select-label">Ano <select id="categoryYear"><option>2026</option><option>2027</option><option>2028</option></select></label></div>
       <div class="metric-grid compact-metrics" id="categoryCards"></div>
-      <article class="panel table-panel"><div class="panel-heading"><div><h2>Detalhamento mensal</h2><p>Valores agrupados pela categoria e mês de vencimento.</p></div><button class="btn btn-light" id="exportCategory">Exportar CSV ↓</button></div><div class="table-scroll"><table class="category-table"><thead id="categoryHead"></thead><tbody id="categoryBody"></tbody></table></div></article>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Detalhamento mensal</h2><p>Valores agrupados pela categoria e mês de vencimento.</p></div><button class="btn btn-light" id="exportCategory">Exportar Excel ↓</button></div><div class="table-scroll"><table class="category-table"><thead id="categoryHead"></thead><tbody id="categoryBody"></tbody></table></div></article>
     </section>
     <section class="page hidden" id="page-relatorios">
       <div class="page-heading"><div><p class="eyebrow">ACOMPANHAMENTO</p><h1>Relatórios</h1><p class="subheading">Consulte os totais e exporte seus dados para análise.</p></div></div>
-      <div class="report-actions"><article class="panel report-card"><div class="report-symbol">▤</div><h2>Relatório de lançamentos</h2><p>Baixe todos os registros cadastrados em formato CSV, compatível com Excel.</p><button class="btn btn-primary" id="reportEntries">Exportar lançamentos</button></article><article class="panel report-card"><div class="report-symbol">◫</div><h2>Resumo por categoria</h2><p>Exporte a matriz com os valores mensais de cada categoria.</p><button class="btn btn-primary" id="reportCategories">Exportar categorias</button></article><article class="panel report-card"><div class="report-symbol">⇧</div><h2>Cópia de segurança</h2><p>Exporte seus dados ou restaure uma cópia salva anteriormente.</p><button class="btn btn-primary" id="backupExport">Baixar backup</button><label class="btn btn-light file-label">Restaurar backup<input type="file" id="backupImport" accept="application/json"></label></article></div>
+      <div class="report-actions"><article class="panel report-card"><div class="report-symbol">▤</div><h2>Relatório de lançamentos</h2><p>Baixe uma planilha Excel (.xlsx) formatada, com resumo mensal, lançamentos e categorias.</p><button class="btn btn-primary" id="reportEntries">Exportar lançamentos</button></article><article class="panel report-card"><div class="report-symbol">◫</div><h2>Resumo por categoria</h2><p>Gera a mesma planilha Excel, com a aba de valores mensais por categoria.</p><button class="btn btn-primary" id="reportCategories">Exportar categorias</button></article><article class="panel report-card"><div class="report-symbol">⇧</div><h2>Cópia de segurança</h2><p>Exporte seus dados ou restaure uma cópia salva anteriormente.</p><button class="btn btn-primary" id="backupExport">Baixar backup</button><label class="btn btn-light file-label">Restaurar backup<input type="file" id="backupImport" accept="application/json"></label></article></div>
       <article class="panel warning-panel"><strong>Importante sobre os dados</strong><p>Seus registros ficam salvos online na sua conta e podem ser acessados de qualquer aparelho com o mesmo login.</p></article>
     </section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" required></label><label>Data de vencimento<input type="date" id="dueDate" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
 <div class="toast" id="toast"></div>
-<script src="script.js?v=2"></script>
+<script src="exportar-excel.js?v=3"></script>
+<script src="script.js?v=3"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
 setTimeout(function(){

@@ -19,7 +19,10 @@ Os dados ficam no Supabase (banco online), por conta de usuário, com login por 
 Cada usuário só acessa os próprios registros (regras RLS). Funciona em qualquer aparelho com o mesmo login.
 
 ## Publicar
-Envie `index.html`, `style.css`, `script.js` e `README.md` para a raiz do repositório (GitHub Pages).
+Envie `index.html`, `style.css`, `script.js`, `exportar-excel.js` e `README.md` para a raiz do repositório (GitHub Pages).
 No Supabase, em Authentication > URL Configuration, informe o endereço do site em Site URL.
 
 O gráfico usa Chart.js e o banco usa supabase-js, ambos por CDN; o navegador precisa de internet.
+
+## Exportação para Excel
+Os botões de exportação geram uma planilha .xlsx com 3 abas (Resumo, Lançamentos e Por categoria), com fórmulas, filtros, totais e formatação. Não depende de bibliotecas externas.
