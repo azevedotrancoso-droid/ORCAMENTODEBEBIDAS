@@ -20,3 +20,7 @@
 #userEmail{display:block;word-break:break-all}
 
 .boot-msg{max-width:520px;margin:60px auto;padding:16px 18px;border:1px solid #e7edf4;border-left:4px solid #d0453b;border-radius:10px;background:#fff;color:#1b2939;font:500 14px/1.5 "DM Sans",sans-serif}
+
+.month-budget{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.month-budget input{width:120px;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font:inherit;font-weight:700}
+.btn-xs{padding:7px 10px!important;font-size:11px!important}
