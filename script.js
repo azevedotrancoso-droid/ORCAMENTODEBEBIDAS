@@ -10,7 +10,11 @@ const $=id=>document.getElementById(id);
 /* ===== Banco de dados (Supabase) ===== */
 function fromRow(r){return {id:r.id,purchaseDate:r.data_compra,dueDate:r.data_vencimento,supplier:r.fornecedor,invoice:r.nf||'',category:catById[r.categoria_id]||'—',amount:Number(r.valor),status:r.status}}
 function toRow(e){return {data_compra:e.purchaseDate,data_vencimento:e.dueDate,fornecedor:e.supplier,nf:e.invoice||null,categoria_id:catByName[e.category]||catByName[CATEGORIES[0]],valor:e.amount,status:e.status}}
+async function autoPayDue(){const d=new Date(),today=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+ const r=await db.from('orc_lancamentos').update({status:'PAGO'}).eq('status','EM ABERTO').lte('data_vencimento',today).select('id');
+ if(!r.error&&r.data&&r.data.length)toast(r.data.length+' nota(s) vencida(s) marcada(s) como paga(s).')}
 async function loadData(){
+ try{await autoPayDue()}catch(e){}
  let c=await db.from('orc_categorias').select('id,nome');if(c.error)throw c.error;
  const have=new Set(c.data.map(x=>x.nome)),missing=CATEGORIES.filter(n=>!have.has(n));
  if(missing.length){const ins=await db.from('orc_categorias').insert(missing.map(nome=>({nome})));if(ins.error)throw ins.error;c=await db.from('orc_categorias').select('id,nome');if(c.error)throw c.error}

@@ -26,3 +26,6 @@ O gráfico usa Chart.js e o banco usa supabase-js, ambos por CDN; o navegador pr
 
 ## Exportação para Excel
 Os botões de exportação geram uma planilha .xlsx com 3 abas (Resumo, Lançamentos e Por categoria), com fórmulas, filtros, totais e formatação. Não depende de bibliotecas externas.
+
+## Baixa automática
+Notas cuja data de vencimento chegou passam sozinhas para PAGO: o Supabase faz isso todo dia às 00:05 (horário de Brasília) e o site também confere ao abrir.
