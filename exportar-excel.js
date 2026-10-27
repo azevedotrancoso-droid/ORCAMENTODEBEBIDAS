@@ -117,7 +117,7 @@ const monthIdx = iso => Number(String(iso).slice(5, 7)) - 1;
 
 /* ---------- Montagem da pasta de trabalho ---------- */
 function build(data) {
-  const year = Number(data.year), base = Number(data.base) || 0, ov = data.overrides || [];
+  const year = Number(data.year), base = Number(data.base) || 0, ov = data.overrides || [], carries = data.carries || Array(12).fill(0), annual = Number(data.annual) || 0;
   const st = makeStyles(), S = st.style;
   const entries = (data.entries || []).slice().sort((a, b) => (a.dueDate + a.supplier).localeCompare(b.dueDate + b.supplier));
   const cats = (data.categories || []).slice(); entries.forEach(e => { if (!cats.includes(e.category)) cats.push(e.category); });
@@ -128,7 +128,8 @@ function build(data) {
   // cálculos para os valores em cache (o Excel recalcula ao abrir)
   const r2 = x => Math.round(x * 100) / 100;
   const spent = Array(12).fill(0); entries.forEach(e => { spent[monthIdx(e.dueDate)] += Number(e.amount) || 0; }); spent.forEach((v, i) => { spent[i] = r2(v); });
-  const budgets = spent.map((_, i) => (ov[i] !== undefined && ov[i] !== null) ? Number(ov[i]) : base);
+  const nominal = spent.map((_, i) => (ov[i] !== undefined && ov[i] !== null) ? Number(ov[i]) : base);
+  const budgets = nominal.map((b, i) => r2(b + (Number(carries[i]) || 0)));
   const totBudget = r2(budgets.reduce((a, b) => a + b, 0)), totSpent = r2(spent.reduce((a, b) => a + b, 0));
   const openSum = r2(entries.filter(e => e.status === 'EM ABERTO').reduce((a, e) => a + (Number(e.amount) || 0), 0));
 
@@ -152,15 +153,15 @@ function build(data) {
   const kpis = [
     ['Ano de referência', { v: year }, kv('0', C.blue, 1)],
     ['Orçamento-base mensal', { v: base }, kv(MONEY, C.blue, 1)],
-    ['Orçamento anual', { f: 'SUM(B14:B25)', v: totBudget }, kv(MONEY, C.ink, 1)],
-    ['Total comprometido', { f: 'SUM(C14:C25)', v: totSpent }, kv(MONEY, C.ink, 1)],
-    ['Saldo anual', { f: 'B7-B8', v: r2(totBudget - totSpent) }, kv(MONEY, C.ink, 1)],
+    ['Orçamento anual', { v: annual }, kv(MONEY, C.blue, 1)],
+    ['Gasto no ano', { f: 'SUM(C14:C25)', v: totSpent }, kv(MONEY, C.ink, 1)],
+    ['Saldo anual', { f: 'B7-B8', v: r2(annual - totSpent) }, kv(MONEY, C.ink, 1)],
     ['Em aberto (a pagar)', { f: `SUMIFS(${L}$F:$F,${L}$G:$G,"EM ABERTO")`, v: openSum }, kv(MONEY, C.ink, 1)]
   ];
   kpis.forEach((k, i) => { const r = 5 + i; put(R, r, 0, { v: k[0], s: kl }); put(R, r, 1, Object.assign({ s: k[2] }, k[1])); rowH(R, r, 21); });
   rowH(R, 11, 10);
   put(R, 12, 0, { v: 'DETALHAMENTO MENSAL', s: sSec }); merge(R, 12, 0, 12, 5, sSec); rowH(R, 12, 22);
-  ['Mês', 'Orçamento do mês', 'Comprometido', 'Saldo', '% utilizado', 'Situação'].forEach((h, c) => put(R, 13, c, { v: h, s: c === 0 ? sHeadL : sHead })); rowH(R, 13, 24);
+  ['Mês', 'Disponível no mês', 'Comprometido', 'Saldo', '% utilizado', 'Situação'].forEach((h, c) => put(R, 13, c, { v: h, s: c === 0 ? sHeadL : sHead })); rowH(R, 13, 24);
   for (let m = 0; m < 12; m++) {
     const r = 14 + m, band = m % 2 ? C.light : null, custom = ov[m] !== undefined && ov[m] !== null;
     const bd = { b: thin };
@@ -171,7 +172,7 @@ function build(data) {
     const sF = S({ fill: band, h: 'center', border: bd });
     const sp = spent[m], bu = budgets[m];
     put(R, r, 0, { v: MONTHS[m], s: sA });
-    put(R, r, 1, custom ? { v: bu, s: sB } : { f: '$B$6', v: bu, s: sB });
+    const cr = r2(Number(carries[m]) || 0); put(R, r, 1, { f: (custom ? String(nominal[m]) : '$B$6') + (cr ? (cr > 0 ? '+' : '-') + Math.abs(cr) : ''), v: bu, s: sB });
     put(R, r, 2, { f: `SUMIFS(${L}$F:$F,${L}$B:$B,">="&DATE($B$5,${m + 1},1),${L}$B:$B,"<"&DATE($B$5,${m + 2},1))`, v: sp, s: sMoney });
     put(R, r, 3, { f: `B${r}-C${r}`, v: r2(bu - sp), s: sMoney });
     put(R, r, 4, { f: `IF(B${r}>0,C${r}/B${r},0)`, v: bu > 0 ? sp / bu : 0, s: sP });
@@ -184,14 +185,14 @@ function build(data) {
   const sTP = S({ b: 1, fmt: PCT, fill: C.softBlue, h: 'right', border: tb });
   const sTF = S({ b: 1, fill: C.softBlue, h: 'center', border: tb });
   put(R, 26, 0, { v: 'TOTAL DO ANO', s: sTL });
-  put(R, 26, 1, { f: 'SUM(B14:B25)', v: totBudget, s: sTM });
+  put(R, 26, 1, { f: 'B7', v: annual, s: sTM });
   put(R, 26, 2, { f: 'SUM(C14:C25)', v: totSpent, s: sTM });
-  put(R, 26, 3, { f: 'B26-C26', v: r2(totBudget - totSpent), s: sTM });
-  put(R, 26, 4, { f: 'IF(B26>0,C26/B26,0)', v: totBudget > 0 ? totSpent / totBudget : 0, s: sTP });
+  put(R, 26, 3, { f: 'B26-C26', v: r2(annual - totSpent), s: sTM });
+  put(R, 26, 4, { f: 'IF(B26>0,C26/B26,0)', v: annual > 0 ? totSpent / annual : 0, s: sTP });
   put(R, 26, 5, { s: sTF }); rowH(R, 26, 22);
   const sNote = S({ sz: 9, color: C.gray, i: 1, h: 'left', v: 'top', wrap: 1 });
   put(R, 28, 0, { v: 'Legenda: valores em azul são digitados (orçamento-base e ajustes de cada mês); valores em preto são calculados por fórmula e se atualizam sozinhos. O comprometido de cada mês considera a data de vencimento dos lançamentos (aba Lançamentos).', s: sNote }); merge(R, 28, 0, 28, 5, sNote); rowH(R, 28, 40);
-  put(R, 29, 0, { v: 'Regra: o saldo não utilizado de um mês não é somado ao mês seguinte.', s: sNote }); merge(R, 29, 0, 29, 5, sNote); rowH(R, 29, 16);
+  put(R, 29, 0, { v: 'Regra: o saldo de cada mês passa para o mês seguinte (excedente é descontado e sobra é somada). A coluna Disponível já considera esse ajuste.', s: sNote }); merge(R, 29, 0, 29, 5, sNote); rowH(R, 29, 16);
   const dRed = st.dxf({ color: '9B2C23', bg: 'FDE9E7', b: 1 }), dGreen = st.dxf({ color: '14663A', bg: 'E6F5EC', b: 1 }), dRedTxt = st.dxf({ color: 'C0392B', b: 1 });
   R.cf.push({ ref: 'F14:F25', op: 'equal', formula: '"Acima do orçamento"', dxf: dRed });
   R.cf.push({ ref: 'F14:F25', op: 'equal', formula: '"Dentro do orçamento"', dxf: dGreen });
