@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Orçamento Bebidas">
   <meta name="theme-color" content="#102b46"><title>Orçamento de Bebidas | Gestão</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -38,7 +38,8 @@
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
   </aside>
   <main class="main-area">
-    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
+    <div class="offline-banner" id="offlineBanner" role="status" hidden><strong>Você está offline.</strong> A interface está disponível, mas login, consulta e gravação dos dados exigem internet.</div>
+    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><span class="connection-state" id="connectionState" role="status"><i></i><span>Conectado</span></span><button class="btn btn-install" id="installApp" type="button" hidden>＋ Instalar app</button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
     <section class="page" id="page-dashboard">
       <div class="page-heading"><div><p class="eyebrow">VISÃO GERAL</p><h1>Dashboard</h1><p class="subheading">Acompanhe seu orçamento e os compromissos de bebidas.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="yearFilter"><option>2026</option><option>2027</option><option>2028</option></select></label></div></div>
       <div class="metric-grid">
@@ -79,7 +80,8 @@
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=1"></script>
-<script src="script.js?v=9"></script>
+<script src="script.js?v=10"></script>
+<script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
 setTimeout(function(){
