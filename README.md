@@ -19,13 +19,18 @@ Os dados ficam no Supabase (banco online), por conta de usuário, com login por 
 Cada usuário só acessa os próprios registros (regras RLS). Funciona em qualquer aparelho com o mesmo login.
 
 ## Publicar
-Envie `index.html`, `style.css`, `script.js`, `exportar-excel.js` e `README.md` para a raiz do repositório (GitHub Pages).
+Envie `index.html`, `style.css`, `script.js`, `exportar-excel.js`, `exportar-pdf.js` e `README.md` para a raiz do repositório (GitHub Pages).
 No Supabase, em Authentication > URL Configuration, informe o endereço do site em Site URL.
 
 O gráfico usa Chart.js e o banco usa supabase-js, ambos por CDN; o navegador precisa de internet.
 
+## Relatórios em PDF
+Na página Relatórios, escolha o ano e baixe um PDF A4 paisagem (sem bibliotecas externas):
+- **Relatório de lançamentos**: resumo com indicadores e gráficos, orçamento mensal e lançamentos agrupados por mês, com subtotais e totais pago/em aberto.
+- **Resumo por categoria**: resumo, quadro mensal por categoria e gráfico de evolução.
+
 ## Exportação para Excel
-Os botões de exportação geram uma planilha .xlsx com 3 abas (Resumo, Lançamentos e Por categoria), com fórmulas, filtros, totais e formatação. Não depende de bibliotecas externas.
+Os botões "Exportar Excel" das páginas Lançamentos e Análise por categoria geram uma planilha .xlsx com 3 abas (Resumo, Lançamentos e Por categoria), com fórmulas, filtros, totais e formatação. Não depende de bibliotecas externas.
 
 ## Baixa automática
 Notas cuja data de vencimento chegou passam sozinhas para PAGO: o Supabase faz isso todo dia às 00:05 (horário de Brasília) e o site também confere ao abrir.
