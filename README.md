@@ -14,12 +14,21 @@ Interface web responsiva inspirada na estrutura da planilha `ORÇAMENTO DE BEBID
 ## Começar
 Abra `index.html` em um navegador moderno. É possível publicar a pasta em um serviço de hospedagem estática, como GitHub Pages.
 
+## Tema claro/escuro
+O botão (lua/sol) no topo alterna o tema; no login ele fica no canto superior direito. A escolha fica salva no navegador (`ob-theme`); sem escolha, o sistema segue o tema do aparelho. As cores ficam em variáveis CSS no início de `style.css`, e os gráficos se ajustam sozinhos. PDFs e Excel exportados continuam sempre no padrão claro, e a impressão também.
+
+## Instalar como aplicativo (PWA)
+- **Computador e Android (Chrome/Edge):** abra o site e use o botão “Instalar aplicativo” no menu lateral, ou o ícone de instalar na barra de endereço.
+- **iPhone/iPad:** abra no Safari, toque em Compartilhar e depois em “Adicionar à Tela de Início”.
+- Exige endereço `https` (o GitHub Pages já é). Depois de instalado, a interface abre mesmo sem internet; dados e login precisam de conexão.
+- Ao publicar uma versão nova, aumente o número em `CACHE_NAME` no `sw.js` (`v2` → `v3`) para os aparelhos atualizarem.
+
 ## Armazenamento
 Os dados ficam no Supabase (banco online), por conta de usuário, com login por e-mail e senha.
 Cada usuário só acessa os próprios registros (regras RLS). Funciona em qualquer aparelho com o mesmo login.
 
 ## Publicar
-Envie `index.html`, `style.css`, `script.js`, `exportar-excel.js`, `exportar-pdf.js` e `README.md` para a raiz do repositório (GitHub Pages).
+Envie **todos** os arquivos da pasta para a raiz do repositório (GitHub Pages), inclusive `.nojekyll`, `manifest.webmanifest`, `sw.js`, `pwa.js`, `offline.html` e os ícones `.png`/`.svg`. Sem o manifest, o service worker e os ícones, o navegador não oferece a instalação.
 No Supabase, em Authentication > URL Configuration, informe o endereço do site em Site URL.
 
 O gráfico usa Chart.js e o banco usa supabase-js, ambos por CDN; o navegador precisa de internet.

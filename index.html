@@ -2,17 +2,25 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#102b46"><title>Orçamento de Bebidas | Gestão</title>
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#102b46" id="metaThemeColor">
+  <script>(function(){var t="light";try{var s=localStorage.getItem("ob-theme");if(s==="light"||s==="dark")t=s;else if(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark"}catch(e){}document.documentElement.setAttribute("data-theme",t);var m=document.getElementById("metaThemeColor");if(m)m.setAttribute("content",t==="dark"?"#0a1322":"#102b46")})();</script><title>Orçamento de Bebidas | Gestão</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Orçamento">
+  <meta name="application-name" content="Orçamento de Bebidas">
+  <link rel="stylesheet" href="style.css?v=7">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
 <body>
 <p id="bootMsg" class="boot-msg hidden"></p>
 <div id="authView" class="auth-view hidden">
+  <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
   <form class="auth-card" id="authForm">
     <div class="brand-mark">OB</div>
     <h1>Orçamento de Bebidas</h1>
@@ -35,10 +43,12 @@
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
     </nav>
+    <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
   </aside>
   <main class="main-area">
-    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
+    <div class="offline-banner" id="offlineBanner" role="status" hidden>Sem conexão. Lançamentos e login só funcionam com internet.</div>
+    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb">Gestão <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
     <section class="page" id="page-dashboard">
       <div class="page-heading"><div><p class="eyebrow">VISÃO GERAL</p><h1>Dashboard</h1><p class="subheading">Acompanhe seu orçamento e os compromissos de bebidas.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="yearFilter"><option>2026</option><option>2027</option><option>2028</option></select></label></div></div>
       <div class="metric-grid">
@@ -79,7 +89,9 @@
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=1"></script>
-<script src="script.js?v=9"></script>
+<script src="tema.js?v=1"></script>
+<script src="script.js?v=10"></script>
+<script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
 setTimeout(function(){
