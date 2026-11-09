@@ -1,10 +1,10 @@
 /* Service worker — Orçamento de Bebidas
  * Para publicar uma versão nova do app, aumente o número em CACHE_NAME (v2 -> v3). */
 const CACHE_PREFIX = 'orcamento-bebidas-pwa-';
-const CACHE_NAME = CACHE_PREFIX + 'v2';
+const CACHE_NAME = CACHE_PREFIX + 'v3';
 
 const APP_SHELL = [
-  './', './index.html', './style.css', './tema.js', './script.js',
+  './', './index.html', './style.css', './tema.js', './datepicker.js', './script.js',
   './exportar-excel.js', './exportar-pdf.js', './pwa.js',
   './manifest.webmanifest', './offline.html',
   './favicon.svg', './favicon-32.png', './apple-touch-icon.png',

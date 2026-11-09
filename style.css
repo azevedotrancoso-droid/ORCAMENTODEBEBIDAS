@@ -79,3 +79,50 @@ html[data-theme="dark"] ::-webkit-scrollbar-track{background:transparent}
 .offline-banner{padding:9px 34px;background:var(--orange-soft);color:var(--open-fg);border-bottom:1px solid var(--warn-border);font-size:12px;font-weight:600}
 @media(max-width:780px){.offline-banner{padding:9px 16px}}
 @media print{.install-btn,.offline-banner{display:none!important}}
+
+/* ===== Calendário próprio (datepicker.js) ===== */
+.dp-field{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--text-strong);font:12px 'DM Sans',sans-serif;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.dp-field svg{width:16px;height:16px;flex:none;color:var(--accent-fg)}
+.dp-field.is-empty .dp-text{color:var(--faint)}
+.dp-field:hover{border-color:var(--faint)}
+.dp-field:focus-visible,.dp-field[aria-expanded="true"]{outline:none;border-color:#6da0ff;box-shadow:0 0 0 3px #3478f615}
+html[data-theme="dark"] .dp-field:focus-visible,html[data-theme="dark"] .dp-field[aria-expanded="true"]{border-color:#4d8dff;box-shadow:0 0 0 3px rgba(77,141,255,.22)}
+
+.dp-pop{position:fixed;z-index:200;width:292px;padding:14px;background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow);font-family:'DM Sans',sans-serif;color:var(--text);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .14s ease,transform .14s ease,visibility 0s .14s}
+.dp-pop.open{opacity:1;visibility:visible;transform:none;transition:opacity .14s ease,transform .14s ease}
+html[data-theme="dark"] .dp-pop{box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.dp-pop button{font-family:inherit}
+.dp-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:10px}
+.dp-title{flex:1;border:0;background:none;border-radius:8px;padding:7px 8px;font:800 14px Manrope,'DM Sans',sans-serif;color:var(--heading);cursor:pointer;letter-spacing:-.2px}
+.dp-title span{font-weight:600;color:var(--text-2)}
+.dp-title:hover{background:var(--fill)}
+.dp-title.static{cursor:default;text-align:center}
+.dp-title.static:hover{background:none}
+.dp-nav{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:9px;background:var(--surface);color:var(--text-2);cursor:pointer}
+.dp-nav svg{width:15px;height:15px}
+.dp-nav:hover{background:var(--fill);color:var(--heading)}
+.dp-week,.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp-week span{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:4px 0 6px}
+.dp-day{height:36px;border:0;border-radius:9px;background:none;color:var(--text-strong);font-size:13px;font-weight:500;cursor:pointer;position:relative}
+.dp-day.out{color:var(--faint)}
+.dp-day:hover{background:var(--fill-hover)}
+.dp-day.today{font-weight:800;color:var(--accent-fg);background:var(--accent-soft)}
+.dp-day.selected,.dp-day.selected:hover{background:linear-gradient(135deg,#5aa3ff,#2d70e8);color:#fff;font-weight:800;box-shadow:0 4px 10px rgba(52,120,246,.32)}
+.dp-day:focus-visible,.dp-cell:focus-visible,.dp-nav:focus-visible,.dp-title:focus-visible,.dp-today:focus-visible,.dp-close:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.dp-list{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dp-cell{height:42px;border:0;border-radius:9px;background:var(--fill);color:var(--text-strong);font-size:13px;font-weight:600;cursor:pointer}
+.dp-cell:hover{background:var(--fill-hover)}
+.dp-cell.today{color:var(--accent-fg)}
+.dp-cell.current{background:linear-gradient(135deg,#5aa3ff,#2d70e8);color:#fff}
+.dp-foot{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+.dp-today,.dp-close{border:0;background:none;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.dp-today{color:var(--accent-fg)}
+.dp-close{color:var(--muted)}
+.dp-today:hover,.dp-close:hover{background:var(--fill)}
+
+/* Celular: abre como folha na parte de baixo da tela */
+.dp-pop.sheet{left:10px;right:10px;bottom:10px;top:auto;width:auto;max-width:360px;margin:0 auto;padding:16px;transform:translateY(12px)}
+.dp-pop.sheet.open{transform:none}
+.dp-pop.sheet .dp-day{height:42px}
+@media (prefers-reduced-motion:reduce){.dp-pop,.dp-pop.open{transition:none}}
+@media print{.dp-pop{display:none!important}}
