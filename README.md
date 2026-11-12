@@ -46,3 +46,12 @@ Notas cuja data de vencimento chegou passam sozinhas para PAGO: o Supabase faz i
 
 ## Vários usuários
 Os dados pertencem a um "espaço de trabalho" do dono. Para dar acesso a outra pessoa, ela cria conta no site e depois se cadastra na tabela `orc_membros` do Supabase (user_id = id dela, dono_id = id do dono). Quem não está na tabela vê só os próprios dados (vazio).
+
+## Malote NF (nova aba)
+
+Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote tem mês, ano e semana
+(1ª = dias 1–7, 2ª = 8–14, 3ª = 15–21, 4ª = 22–28, 5ª = 29 até o fim do mês) e várias notas
+(nº da NF, fornecedor, data de compra e data de vencimento).
+
+**Antes de usar:** rode o arquivo `malote.sql` uma vez no SQL Editor do Supabase. Sem isso a aba
+funciona, mas salva só no aparelho atual (um aviso aparece na tela).

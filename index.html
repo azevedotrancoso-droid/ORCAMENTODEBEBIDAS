@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -42,6 +42,7 @@
       <button class="nav-item" data-page="orcamento"><span>◫</span> Orçamento mensal</button>
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
+      <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
     </nav>
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
@@ -83,15 +84,24 @@
       <div class="report-actions"><article class="panel report-card"><div class="report-symbol">▤</div><h2>Relatório de lançamentos</h2><p>PDF profissional com resumo do ano, orçamento mensal e a lista de lançamentos agrupada por mês, com subtotais.</p><button class="btn btn-primary" id="reportEntries">Exportar PDF</button></article><article class="panel report-card"><div class="report-symbol">◫</div><h2>Resumo por categoria</h2><p>PDF com resumo do ano, quadro mensal por categoria e gráfico de evolução dos gastos.</p><button class="btn btn-primary" id="reportCategories">Exportar PDF</button></article><article class="panel report-card"><div class="report-symbol">⇧</div><h2>Cópia de segurança</h2><p>Exporte seus dados ou restaure uma cópia salva anteriormente.</p><button class="btn btn-primary" id="backupExport">Baixar backup</button><label class="btn btn-light file-label">Restaurar backup<input type="file" id="backupImport" accept="application/json"></label></article></div>
       <article class="panel warning-panel"><strong>Importante sobre os dados</strong><p>Seus registros ficam salvos online na sua conta e podem ser acessados de qualquer aparelho com o mesmo login.</p></article>
     </section>
+    <section class="page hidden" id="page-malote">
+      <div class="page-heading"><div><p class="eyebrow">CONTROLE DE NOTAS</p><h1>Malote NF</h1><p class="subheading">Agrupe as notas fiscais por semana do mês e lance várias notas no mesmo malote.</p></div><button class="btn btn-primary" id="mlNew">＋ Novo malote</button></div>
+      <article class="panel warning-panel ml-banner hidden" id="mlLocalBanner"><strong>Salvando somente neste aparelho</strong><p>As tabelas do Malote NF ainda não existem no Supabase. Rode o arquivo <b>malote.sql</b> no SQL Editor do Supabase e recarregue a página para os malotes ficarem salvos online e compartilhados.</p></article>
+      <div class="toolbar panel"><div class="searchbox"><span>⌕</span><input id="mlSearch" placeholder="Buscar NF, fornecedor ou nome do malote..."></div><select id="mlYear" aria-label="Ano"></select><select id="mlMonth" aria-label="Mês"><option value="all">Todos os meses</option><option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option><option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option><option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option><option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option></select><select id="mlWeek" aria-label="Semana do mês"><option value="all">Todas as semanas</option><option value="1">1ª semana</option><option value="2">2ª semana</option><option value="3">3ª semana</option><option value="4">4ª semana</option><option value="5">5ª semana</option></select></div>
+      <p class="ml-count" id="mlCount"></p>
+      <div class="malote-list" id="malotesList"></div>
+    </section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
+<div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3><button type="button" class="btn btn-light btn-xs" id="mlAddRow">＋ Adicionar nota</button></div><div class="ml-rows" id="mlRows"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></form></section></div>
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=1"></script>
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
-<script src="script.js?v=10"></script>
+<script src="malote.js?v=1"></script>
+<script src="script.js?v=11"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
