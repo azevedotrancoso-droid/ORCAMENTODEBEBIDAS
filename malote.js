@@ -9,7 +9,7 @@
   'use strict';
 
   var LS_KEY = 'ob-malote-v1';
-  var S = { malotes: [], notas: [], local: false, editingId: null, removed: [], years: [] };
+  var S = { malotes: [], notas: [], local: false, editingId: null, removed: [], years: [], collapsed: {} };
 
   function el(id) { return document.getElementById(id); }
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -180,20 +180,34 @@
       }
       return true;
     }).sort(function (a, b) {
-      return (b.mes - a.mes) || (b.semana - a.semana) || String(b.created_at || '').localeCompare(String(a.created_at || ''));
+      return (b.mes - a.mes) || (a.semana - b.semana) ||
+        String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR', { numeric: true }) ||
+        String(a.created_at || '').localeCompare(String(b.created_at || ''));
     });
+  }
+
+  function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
+
+  function dueRange(ns) {
+    var ds = ns.map(function (n) { return n.data_vencimento; }).filter(Boolean).sort();
+    if (!ds.length) return '';
+    return ds[0] === ds[ds.length - 1]
+      ? 'Vencimento em ' + dateFmt(ds[0])
+      : 'Vencimentos de ' + dateFmt(ds[0]) + ' a ' + dateFmt(ds[ds.length - 1]);
   }
 
   function card(m, ns) {
     var title = m.nome ? esc(m.nome) : 'Malote da ' + m.semana + 'ª semana';
-    var sub = weekLabel(m.ano, m.mes, m.semana) + ' de ' + MONTHS[m.mes] + '/' + m.ano + ' • ' + ns.length + ' nota(s)';
+    var sub = dueRange(ns);
     var rows = ns.length ? ns.map(function (n) {
-      return '<tr><td class="td-main">' + esc(n.nf) + '</td><td>' + esc(n.fornecedor) + '</td><td>' +
+      return '<tr><td class="td-main">' + esc(n.nf) + '</td><td class="ml-sup-cell" title="' + esc(n.fornecedor) + '">' + esc(n.fornecedor) + '</td><td>' +
         dateFmt(n.data_compra) + '</td><td>' + dateFmt(n.data_vencimento) + '</td><td class="ml-td-actions">' +
         '<button type="button" class="action-btn" title="Editar nota" data-ml-edit-nota="' + esc(m.id) + '|' + esc(n.id) + '">✎</button>' +
         '<button type="button" class="action-btn" title="Excluir nota" data-ml-del-nota="' + esc(n.id) + '">×</button></td></tr>';
     }).join('') : '<tr><td class="empty-row" colspan="5">Nenhuma nota neste malote.</td></tr>';
-    return '<article class="panel malote-card"><div class="malote-head"><div><h2>' + title + '</h2><p>' + esc(sub) + '</p></div>' +
+    return '<article class="panel malote-card"><div class="malote-head"><div class="malote-title">' +
+      '<span class="ml-badge">' + plural(ns.length, 'nota', 'notas') + '</span>' +
+      '<h2>' + title + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' +
       '<div class="malote-actions">' +
       '<button type="button" class="btn btn-primary btn-xs" data-ml-add="' + esc(m.id) + '">＋ Adicionar notas</button>' +
       '<button type="button" class="action-btn" title="Editar malote" data-ml-edit="' + esc(m.id) + '">✎</button>' +
@@ -202,14 +216,58 @@
       rows + '</tbody></table></div></article>';
   }
 
+  /* Agrupa a lista já filtrada: mês -> semana -> malotes */
+  function groupList(list) {
+    var months = [], byMonth = {};
+    list.forEach(function (m) {
+      var key = m.ano + '-' + pad(m.mes + 1), g = byMonth[key];
+      if (!g) { g = byMonth[key] = { key: key, ano: m.ano, mes: m.mes, weeks: [], byWeek: {}, malotes: 0, notas: 0 }; months.push(g); }
+      var w = g.byWeek[m.semana];
+      if (!w) { w = g.byWeek[m.semana] = { semana: m.semana, items: [], notas: 0 }; g.weeks.push(w); }
+      var ns = notesOf(m.id);
+      w.items.push({ m: m, ns: ns }); w.notas += ns.length;
+      g.malotes++; g.notas += ns.length;
+    });
+    months.forEach(function (g) { g.weeks.sort(function (a, b) { return a.semana - b.semana; }); });
+    return months;
+  }
+
+  function monthHtml(g) {
+    var closed = !!S.collapsed[g.key];
+    var weeks = g.weeks.map(function (w) {
+      var range = weekRange(g.ano, g.mes, w.semana);
+      return '<div class="ml-week"><div class="ml-week-head"><h3>' + w.semana + 'ª semana</h3>' +
+        (range ? '<span class="ml-week-range">dias ' + range + '</span>' : '') +
+        '<span class="ml-week-meta">' + plural(w.items.length, 'malote', 'malotes') + ' · ' + plural(w.notas, 'nota', 'notas') + '</span></div>' +
+        '<div class="malote-grid">' + w.items.map(function (x) { return card(x.m, x.ns); }).join('') + '</div></div>';
+    }).join('');
+    return '<section class="ml-month' + (closed ? ' is-collapsed' : '') + '">' +
+      '<button type="button" class="ml-month-head" data-ml-toggle="' + g.key + '" aria-expanded="' + (closed ? 'false' : 'true') + '">' +
+      '<span class="ml-chevron" aria-hidden="true">▾</span>' +
+      '<span class="ml-month-title">' + MONTHS[g.mes] + '<small>' + g.ano + '</small></span>' +
+      '<span class="ml-month-meta"><b>' + plural(g.malotes, 'malote', 'malotes') + '</b><i>·</i><b>' + plural(g.notas, 'nota', 'notas') + '</b></span></button>' +
+      '<div class="ml-month-body">' + weeks + '</div></section>';
+  }
+
   function render() {
     if (!el('malotesList')) return;
     el('mlLocalBanner').classList.toggle('hidden', !S.local);
-    var list = filtered(), total = 0, html = '';
-    list.forEach(function (m) { var ns = notesOf(m.id); total += ns.length; html += card(m, ns); });
-    el('malotesList').innerHTML = html ||
+    var list = filtered(), months = groupList(list), total = 0;
+    list.forEach(function (m) { total += notesOf(m.id).length; });
+    el('malotesList').innerHTML = months.map(monthHtml).join('') ||
       '<div class="panel ml-empty">Nenhum malote encontrado. Clique em “Novo malote” para cadastrar.</div>';
-    el('mlCount').textContent = list.length + ' malote(s) • ' + total + ' nota(s)';
+    el('mlCount').textContent = plural(list.length, 'malote', 'malotes') + ' • ' + plural(total, 'nota', 'notas');
+    var allClosed = months.length && months.every(function (g) { return S.collapsed[g.key]; });
+    var btn = el('mlToggleAll');
+    if (btn) { btn.classList.toggle('hidden', !months.length); btn.textContent = allClosed ? 'Expandir tudo' : 'Recolher tudo'; }
+  }
+
+  function toggleMonth(key) { S.collapsed[key] = !S.collapsed[key]; render(); }
+  function toggleAll() {
+    var keys = groupList(filtered()).map(function (g) { return g.key; });
+    var allClosed = keys.length && keys.every(function (k) { return S.collapsed[k]; });
+    keys.forEach(function (k) { S.collapsed[k] = !allClosed; });
+    render();
   }
 
   /* ---------- Modal: malote + várias notas ---------- */
@@ -360,6 +418,7 @@
     el('mlFMonth').onchange = el('mlFYear').onchange = function () { fillWeeks(el('mlFWeek').value); };
     ['mlYear', 'mlMonth', 'mlWeek'].forEach(function (id) { el(id).onchange = render; });
     el('mlSearch').oninput = render;
+    if (el('mlToggleAll')) el('mlToggleAll').onclick = toggleAll;
 
     el('mlRows').addEventListener('click', function (e) {
       var b = e.target.closest('.ml-rm');
@@ -373,6 +432,7 @@
 
     el('malotesList').addEventListener('click', function (e) {
       var t;
+      if ((t = e.target.closest('[data-ml-toggle]'))) return toggleMonth(t.dataset.mlToggle);
       if ((t = e.target.closest('[data-ml-add]'))) return openModal(t.dataset.mlAdd, { addBlank: true });
       if ((t = e.target.closest('[data-ml-edit-nota]'))) {
         var p = t.dataset.mlEditNota.split('|');

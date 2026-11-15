@@ -141,12 +141,14 @@ html[data-theme="dark"] .dp-pop{box-shadow:0 24px 70px rgba(0,0,0,.55)}
 .ml-row input.ml-nf,.ml-row input.ml-sup,.ml-row .dp-field{height:40px}
 .ml-row input.ml-nf:focus,.ml-row input.ml-sup:focus{border-color:#6da0ff;box-shadow:0 0 0 3px #3478f615}
 .ml-rm{height:40px;margin:0!important;font-size:18px;line-height:1}
-.ml-count{margin:0 0 12px;color:var(--muted);font-size:12px;font-weight:600}
+.ml-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.ml-count{margin:0;color:var(--muted);font-size:12px;font-weight:600}
 .ml-banner{margin:0 0 17px}
-.malote-list{display:grid;gap:16px}
+.malote-list{display:grid;gap:18px}
 .malote-card{padding:21px 22px}
 .malote-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:15px}
 .malote-head h2{font:800 15px Manrope,'DM Sans',sans-serif;margin:0;color:var(--heading)}
+.malote-title{min-width:0}
 .malote-head p{margin:6px 0 0;color:var(--muted);font-size:11px}
 .malote-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .malote-actions .action-btn{margin-left:0}
@@ -165,4 +167,39 @@ html[data-theme="dark"] .ml-row input.ml-nf:focus,html[data-theme="dark"] .ml-ro
   .ml-row label:nth-child(1){grid-column:span 2}
   .malote-head{flex-direction:column}
   .malote-actions{justify-content:flex-start}
+}
+
+/* ===== Malote NF: agrupamento por mês e semana ===== */
+.ml-month{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.ml-month-head{width:100%;display:flex;align-items:center;gap:12px;padding:16px 20px;border:0;background:var(--surface-2);color:var(--heading);cursor:pointer;text-align:left;font:inherit;border-bottom:1px solid var(--line)}
+.ml-month.is-collapsed .ml-month-head{border-bottom-color:transparent}
+.ml-month-head:hover{background:var(--fill)}
+.ml-month-head:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.ml-chevron{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;background:var(--accent-soft);color:var(--accent-fg);font-size:13px;transition:transform .18s;flex:none}
+.ml-month.is-collapsed .ml-chevron{transform:rotate(-90deg)}
+.ml-month-title{font:800 17px Manrope,'DM Sans',sans-serif;letter-spacing:-.3px}
+.ml-month-title small{margin-left:8px;color:var(--muted);font:700 12px 'DM Sans',sans-serif;letter-spacing:0}
+.ml-month-meta{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;font-weight:600;white-space:nowrap}
+.ml-month-meta b{color:var(--text-2);font-weight:700}
+.ml-month-meta i{font-style:normal;color:var(--faint)}
+.ml-month-body{padding:6px 20px 20px;display:grid;gap:6px}
+.ml-month.is-collapsed .ml-month-body{display:none}
+.ml-week{padding-top:14px}
+.ml-week-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding:0 0 11px;margin-bottom:12px;border-bottom:1px solid var(--line-soft)}
+.ml-week-head h3{margin:0;font:800 13px Manrope,'DM Sans',sans-serif;color:var(--heading);text-transform:uppercase;letter-spacing:.6px}
+.ml-week-range{color:var(--muted);font-size:11px;font-weight:600}
+.ml-week-meta{margin-left:auto;color:var(--muted);font-size:11px;font-weight:600}
+.malote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,560px),1fr));gap:14px;align-items:start}
+.ml-month .malote-card{padding:16px 18px;box-shadow:none;background:var(--surface)}
+.ml-month .malote-head{padding-bottom:12px}
+.ml-month .malote-table{min-width:0;table-layout:auto}
+.ml-badge{display:inline-flex;margin-bottom:8px;padding:4px 9px;border-radius:20px;background:var(--accent-soft);color:var(--accent-fg);font-size:10px;font-weight:800;letter-spacing:.2px}
+.ml-sup-cell{max-width:180px;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:780px){
+  .ml-month-head{padding:14px 14px}
+  .ml-month-body{padding:4px 12px 16px}
+  .ml-month-meta{flex-direction:column;align-items:flex-end;gap:2px}
+  .ml-month-meta i{display:none}
+  .ml-week-meta{margin-left:0;width:100%}
+  .ml-month .malote-table{min-width:520px}
 }

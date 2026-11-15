@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -88,7 +88,7 @@
       <div class="page-heading"><div><p class="eyebrow">CONTROLE DE NOTAS</p><h1>Malote NF</h1><p class="subheading">Agrupe as notas fiscais por semana do mês e lance várias notas no mesmo malote.</p></div><button class="btn btn-primary" id="mlNew">＋ Novo malote</button></div>
       <article class="panel warning-panel ml-banner hidden" id="mlLocalBanner"><strong>Salvando somente neste aparelho</strong><p>As tabelas do Malote NF ainda não existem no Supabase. Rode o arquivo <b>malote.sql</b> no SQL Editor do Supabase e recarregue a página para os malotes ficarem salvos online e compartilhados.</p></article>
       <div class="toolbar panel"><div class="searchbox"><span>⌕</span><input id="mlSearch" placeholder="Buscar NF, fornecedor ou nome do malote..."></div><select id="mlYear" aria-label="Ano"></select><select id="mlMonth" aria-label="Mês"><option value="all">Todos os meses</option><option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option><option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option><option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option><option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option></select><select id="mlWeek" aria-label="Semana do mês"><option value="all">Todas as semanas</option><option value="1">1ª semana</option><option value="2">2ª semana</option><option value="3">3ª semana</option><option value="4">4ª semana</option><option value="5">5ª semana</option></select></div>
-      <p class="ml-count" id="mlCount"></p>
+      <div class="ml-summary"><p class="ml-count" id="mlCount"></p><button type="button" class="btn btn-light btn-xs hidden" id="mlToggleAll">Recolher tudo</button></div>
       <div class="malote-list" id="malotesList"></div>
     </section>
   </main>
@@ -100,7 +100,7 @@
 <script src="exportar-pdf.js?v=1"></script>
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
-<script src="malote.js?v=1"></script>
+<script src="malote.js?v=2"></script>
 <script src="script.js?v=11"></script>
 <script src="pwa.js?v=1"></script>
 <script>
