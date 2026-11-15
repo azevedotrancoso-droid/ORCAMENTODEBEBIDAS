@@ -196,24 +196,24 @@
       : 'Vencimentos de ' + dateFmt(ds[0]) + ' a ' + dateFmt(ds[ds.length - 1]);
   }
 
-  function card(m, ns) {
+  function groupRows(m, ns) {
     var title = m.nome ? esc(m.nome) : 'Malote da ' + m.semana + 'ª semana';
     var sub = dueRange(ns);
+    var head = '<tr class="ml-group-row"><td colspan="5"><div class="ml-group-line">' +
+      '<span class="ml-group-name">' + title + '</span>' +
+      '<span class="ml-badge">' + plural(ns.length, 'nota', 'notas') + '</span>' +
+      (sub ? '<span class="ml-group-sub">' + esc(sub) + '</span>' : '') +
+      '<span class="malote-actions">' +
+      '<button type="button" class="btn btn-light btn-xs" data-ml-add="' + esc(m.id) + '">＋ Notas</button>' +
+      '<button type="button" class="action-btn" title="Editar malote" data-ml-edit="' + esc(m.id) + '">✎</button>' +
+      '<button type="button" class="action-btn" title="Excluir malote" data-ml-del="' + esc(m.id) + '">×</button></span></div></td></tr>';
     var rows = ns.length ? ns.map(function (n) {
       return '<tr><td class="td-main">' + esc(n.nf) + '</td><td class="ml-sup-cell" title="' + esc(n.fornecedor) + '">' + esc(n.fornecedor) + '</td><td>' +
         dateFmt(n.data_compra) + '</td><td>' + dateFmt(n.data_vencimento) + '</td><td class="ml-td-actions">' +
         '<button type="button" class="action-btn" title="Editar nota" data-ml-edit-nota="' + esc(m.id) + '|' + esc(n.id) + '">✎</button>' +
         '<button type="button" class="action-btn" title="Excluir nota" data-ml-del-nota="' + esc(n.id) + '">×</button></td></tr>';
     }).join('') : '<tr><td class="empty-row" colspan="5">Nenhuma nota neste malote.</td></tr>';
-    return '<article class="panel malote-card"><div class="malote-head"><div class="malote-title">' +
-      '<span class="ml-badge">' + plural(ns.length, 'nota', 'notas') + '</span>' +
-      '<h2>' + title + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' +
-      '<div class="malote-actions">' +
-      '<button type="button" class="btn btn-primary btn-xs" data-ml-add="' + esc(m.id) + '">＋ Adicionar notas</button>' +
-      '<button type="button" class="action-btn" title="Editar malote" data-ml-edit="' + esc(m.id) + '">✎</button>' +
-      '<button type="button" class="action-btn" title="Excluir malote" data-ml-del="' + esc(m.id) + '">×</button></div></div>' +
-      '<div class="table-scroll"><table class="malote-table"><thead><tr><th>Nº da NF</th><th>Fornecedor</th><th>Data de compra</th><th>Vencimento</th><th></th></tr></thead><tbody>' +
-      rows + '</tbody></table></div></article>';
+    return head + rows;
   }
 
   /* Agrupa a lista já filtrada: mês -> semana -> malotes */
@@ -239,7 +239,8 @@
       return '<div class="ml-week"><div class="ml-week-head"><h3>' + w.semana + 'ª semana</h3>' +
         (range ? '<span class="ml-week-range">dias ' + range + '</span>' : '') +
         '<span class="ml-week-meta">' + plural(w.items.length, 'malote', 'malotes') + ' · ' + plural(w.notas, 'nota', 'notas') + '</span></div>' +
-        '<div class="malote-grid">' + w.items.map(function (x) { return card(x.m, x.ns); }).join('') + '</div></div>';
+        '<div class="panel ml-week-panel"><div class="table-scroll"><table class="malote-table"><thead><tr><th>Nº da NF</th><th>Fornecedor</th><th>Data de compra</th><th>Vencimento</th><th></th></tr></thead><tbody>' +
+        w.items.map(function (x) { return groupRows(x.m, x.ns); }).join('') + '</tbody></table></div></div></div>';
     }).join('');
     return '<section class="ml-month' + (closed ? ' is-collapsed' : '') + '">' +
       '<button type="button" class="ml-month-head" data-ml-toggle="' + g.key + '" aria-expanded="' + (closed ? 'false' : 'true') + '">' +
@@ -253,6 +254,8 @@
     if (!el('malotesList')) return;
     el('mlLocalBanner').classList.toggle('hidden', !S.local);
     var list = filtered(), months = groupList(list), total = 0;
+    var compact = !el('mlSearch').value.trim() && el('mlMonth').value === 'all';
+    months.forEach(function (g, i) { if (S.collapsed[g.key] === undefined) S.collapsed[g.key] = compact && i > 0; });
     list.forEach(function (m) { total += notesOf(m.id).length; });
     el('malotesList').innerHTML = months.map(monthHtml).join('') ||
       '<div class="panel ml-empty">Nenhum malote encontrado. Clique em “Novo malote” para cadastrar.</div>';

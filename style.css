@@ -203,3 +203,17 @@ html[data-theme="dark"] .ml-row input.ml-nf:focus,html[data-theme="dark"] .ml-ro
   .ml-week-meta{margin-left:0;width:100%}
   .ml-month .malote-table{min-width:520px}
 }
+
+/* ===== Malote NF: uma tabela por semana, malotes como grupos ===== */
+.ml-week-panel{box-shadow:none;overflow:hidden}
+.ml-week-panel .malote-table{min-width:560px}
+.ml-group-row td{padding:0!important;background:var(--accent-soft);border-bottom:1px solid var(--line)!important;border-top:1px solid var(--line)}
+.ml-group-row:hover{background:transparent}
+.ml-group-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 13px;white-space:normal}
+.ml-group-name{font:800 12px Manrope,'DM Sans',sans-serif;color:var(--heading)}
+.ml-group-line .ml-badge{margin:0;background:var(--surface);}
+.ml-group-sub{color:var(--muted);font-size:11px;font-weight:600}
+.ml-group-line .malote-actions{margin-left:auto}
+.ml-week-panel tbody tr:first-child.ml-group-row td{border-top:0}
+.ml-month-body{padding:2px 16px 16px}
+.ml-week{padding-top:12px}
