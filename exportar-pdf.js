@@ -100,14 +100,24 @@ function build(opt) {
     push(`BT /${o.bold ? 'F2' : 'F1'} ${n2(size)} Tf ${rgb(o.color || C.ink)} rg ${n2(px)} ${n2(Y(y))} Td ${pdfStr(str)} Tj ET`);
   }
 
+
+  const LOGO = root.LOGO_PDF || null;
+  const logoBin = LOGO ? atob(LOGO.b64) : null;
+  function drawLogo(x, yy, bw, bh) {
+    rect(x, yy, bw, bh, {fill: C.white, r: 9});
+    if (!LOGO) return;
+    const pw = bw - 10, ph = bh - 8, k = Math.min(pw / LOGO.w, ph / LOGO.h), iw = LOGO.w * k, ih = LOGO.h * k;
+    push(`q ${n2(iw)} 0 0 ${n2(ih)} ${n2(x + (bw - iw) / 2)} ${n2(Y(yy + (bh - ih) / 2 + ih))} cm /Im1 Do Q`);
+  }
+
   /* --- páginas --- */
   function newPage(first) {
     cur = []; pages.push(cur);
     if (first) {
       rect(0, 0, W, 78, {fill: C.navy}); rect(0, 78, W, 3, {fill: C.blue});
-      rect(MX, 19, 40, 40, {fill: C.blue, r: 11}); text('OB', MX + 20, 44, {size: 15, bold: true, color: C.white, align: 'center'});
-      text('Orçamento de Bebidas', MX + 54, 36, {size: 17, bold: true, color: C.white});
-      text(kindLabel + '   •   Exercício ' + year, MX + 54, 53, {size: 9.5, color: C.sub});
+      if (LOGO) drawLogo(MX, 17, 66, 46); else { rect(MX, 19, 40, 40, {fill: C.blue, r: 11}); text('OB', MX + 20, 44, {size: 15, bold: true, color: C.white, align: 'center'}); }
+      text('Orçamento de Bebidas', MX + (LOGO ? 80 : 54), 36, {size: 17, bold: true, color: C.white});
+      text(kindLabel + '   •   Exercício ' + year, MX + (LOGO ? 80 : 54), 53, {size: 9.5, color: C.sub});
       text('Gerado em ' + pad2(gen.getDate()) + '/' + pad2(gen.getMonth() + 1) + '/' + gen.getFullYear() + ' às ' + pad2(gen.getHours()) + ':' + pad2(gen.getMinutes()), W - MX, 36, {size: 8.5, color: 'C9D6E4', align: 'right'});
       if (opt.account) text(opt.account, W - MX, 51, {size: 8, color: C.sub, align: 'right'});
       return 98;
@@ -367,9 +377,11 @@ function build(opt) {
   const kids = [];
   pages.forEach((ops, i) => {
     const po = 6 + i * 2, co = po + 1, body = ops.join('\n'); kids.push(po + ' 0 R');
-    objs[po] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${co} 0 R >>`;
+    objs[po] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${logoBin ? ` /XObject << /Im1 ${6 + total * 2} 0 R >>` : ''} >> /Contents ${co} 0 R >>`;
     objs[co] = `<< /Length ${body.length} >>\nstream\n${body}\nendstream`;
   });
+
+  if (logoBin) objs[6 + total * 2] = `<< /Type /XObject /Subtype /Image /Width ${LOGO.w} /Height ${LOGO.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${logoBin.length} >>\nstream\n${logoBin}\nendstream`;
   objs[2] = `<< /Type /Pages /Kids [${kids.join(' ')}] /Count ${total} >>`;
   let out = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'; const off = [];
   for (let i = 1; i < objs.length; i++) { off[i] = out.length; out += `${i} 0 obj\n${objs[i]}\nendobj\n`; }

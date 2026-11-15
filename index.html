@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=14">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -22,7 +22,7 @@
 <div id="authView" class="auth-view hidden">
   <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
   <form class="auth-card" id="authForm">
-    <div class="brand-mark logo"><svg class="logo-svg" viewBox="0 0 64 64" role="img" aria-label="Orçamento de Bebidas"><rect x="6.5" y="6.5" width="51" height="51" rx="15" fill="#183b5f" stroke="#ffffff26"/><rect x="19" y="19" width="8.5" height="24.5" rx="2.6" fill="#fff"/><rect x="30.5" y="25" width="8.5" height="18.5" rx="2.6" fill="#fff"/><rect x="42" y="16" width="8.5" height="27.5" rx="2.6" fill="#f39c3c"/><rect x="17" y="46.5" width="34" height="3.6" rx="1.8" fill="#b8cde0"/></svg></div>
+    <div class="brand-mark logo"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"></div>
     <h1>Orçamento de Bebidas</h1>
     <p class="auth-sub" id="authSub">Entre para acessar seus lançamentos.</p>
     <label>E-mail<input type="email" id="authEmail" autocomplete="email" required></label>
@@ -34,7 +34,7 @@
 </div>
 <div class="app-shell hidden" id="appView">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="brand-mark logo"><svg class="logo-svg" viewBox="0 0 64 64" role="img" aria-label="Orçamento de Bebidas"><rect x="6.5" y="6.5" width="51" height="51" rx="15" fill="#183b5f" stroke="#ffffff26"/><rect x="19" y="19" width="8.5" height="24.5" rx="2.6" fill="#fff"/><rect x="30.5" y="25" width="8.5" height="18.5" rx="2.6" fill="#fff"/><rect x="42" y="16" width="8.5" height="27.5" rx="2.6" fill="#f39c3c"/><rect x="17" y="46.5" width="34" height="3.6" rx="1.8" fill="#b8cde0"/></svg></div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
+    <div class="brand"><div class="brand-mark logo"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"></div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
     <div class="nav-label">MENU PRINCIPAL</div>
     <nav id="mainNav">
       <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
@@ -43,6 +43,7 @@
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
       <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
+      <button class="nav-item" data-page="administrativo"><span>▨</span> Administrativo</button>
     </nav>
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
@@ -92,17 +93,29 @@
       <div class="ml-summary"><p class="ml-count" id="mlCount"></p><button type="button" class="btn btn-light btn-xs hidden" id="mlToggleAll">Recolher tudo</button></div>
       <div class="malote-list" id="malotesList"></div>
     </section>
+    <section class="page hidden" id="page-administrativo">
+      <div class="page-heading"><div><p class="eyebrow">GESTÃO ADMINISTRATIVA</p><h1>Administrativo</h1><p class="subheading">Gere relatórios completos de não conformidade (RNC) e de recusa e devolução de mercadorias, com base legal, prazos calculados e PDF. Tudo fica salvo e organizado por tipo, ano e mês.</p></div><div class="heading-actions adm-head-actions"><button class="btn btn-primary" id="admNewRNC">＋ Novo RNC</button><button class="btn btn-primary" id="admNewRDM">＋ Nova recusa / devolução</button></div></div>
+      <article class="panel warning-panel ml-banner hidden" id="admBanner"><strong>Salvando somente neste aparelho</strong><p>A tabela dos relatórios administrativos ainda não existe no Supabase. Rode o arquivo <b>administrativo.sql</b> no SQL Editor do Supabase e recarregue a página para os relatórios ficarem salvos online e compartilhados.</p></article>
+      <div class="metric-grid" id="admCards"></div>
+      <div class="toolbar panel"><div class="adm-tabs" role="tablist"><button type="button" class="active" data-adm-tab="all">Todos</button><button type="button" data-adm-tab="RNC">Não conformidade (RNC)</button><button type="button" data-adm-tab="RDM">Recusa e devolução</button></div><div class="searchbox"><span>⌕</span><input id="admSearch" placeholder="Buscar nº, fornecedor, NF ou assunto..."></div><select id="admYear" aria-label="Ano"></select><select id="admStatus" aria-label="Status"></select></div>
+      <div class="ml-summary"><p class="ml-count" id="admCount"></p><button type="button" class="btn btn-light btn-xs" id="admIndexPdf">Exportar índice (PDF) ↓</button></div>
+      <div class="malote-list" id="admList"></div>
+    </section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
 <div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3><button type="button" class="btn btn-light btn-xs" id="mlAddRow">＋ Adicionar nota</button></div><div class="ml-rows" id="mlRows"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></form></section></div>
+<div class="modal-backdrop hidden" id="admModal"><section class="modal modal-wide adm-modal"><div class="modal-head"><div><p class="eyebrow" id="admEyebrow">NOVO RELATÓRIO</p><h2 id="admModalTitle">Relatório</h2></div><button type="button" class="close-modal" id="admClose" aria-label="Fechar">×</button></div><form id="admForm" novalidate></form></section></div>
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
-<script src="exportar-pdf.js?v=1"></script>
+<script src="exportar-pdf.js?v=2"></script>
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=3"></script>
-<script src="script.js?v=12"></script>
+<script src="logo-pdf.js?v=1"></script>
+<script src="administrativo-pdf.js?v=2"></script>
+<script src="administrativo.js?v=1"></script>
+<script src="script.js?v=13"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */

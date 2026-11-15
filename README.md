@@ -55,3 +55,11 @@ Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote te
 
 **Antes de usar:** rode o arquivo `malote.sql` uma vez no SQL Editor do Supabase. Sem isso a aba
 funciona, mas salva só no aparelho atual (um aviso aparece na tela).
+
+## Administrativo (RNC e Recusa/Devolução)
+Aba nova no menu. Gera e guarda dois tipos de relatório, ambos com PDF A4 próprio (sem bibliotecas externas):
+- **RNC — Relatório de Não Conformidade**: identificação, item/fornecedor, descrição, contenção, análise de causa (5 Porquês e 6M), plano de ação 5W2H, impactos, verificação de eficácia, encerramento e assinaturas, com base na ABNT NBR ISO 9001:2015 (8.7, 10.2, 7.5) e legislação aplicável ao tipo da ocorrência. A RNC só pode ser encerrada com causa raiz, ação registrada e eficácia confirmada.
+- **RDM — Recusa e Devolução de Mercadorias**: fornecedor, NF-e (a chave de acesso preenche NF, série e CNPJ e tem o dígito verificador conferido), transporte, itens com totais, motivos, comprovações, providências, orientação fiscal conforme o tipo (recusa total, parcial ou devolução posterior) e prazos legais calculados a partir das datas informadas (CC art. 754 e 445; CDC arts. 18 e 26; manifestação do destinatário).
+- **Organização**: número sequencial por tipo e ano (`RNC-2026-0001`, `RDM-2026-0001`), lista agrupada por mês, abas por tipo, filtros (ano, status, busca), editar, duplicar, excluir, baixar o PDF de qualquer relatório a qualquer momento e exportar o índice em PDF.
+- **Banco**: rode `administrativo.sql` uma vez no Supabase (SQL Editor). Sem a tabela, os relatórios ficam só no aparelho e a tela avisa.
+- **Atenção**: as referências legais são informativas e as regras de NF-e para recusa/devolução estão em transição (Ajuste SINIEF 49/2025 e alterações). Confirme com o contador antes de usar o texto fiscal como instrução oficial. O texto fica em `administrativo-pdf.js` (`fiscalRDM`, `REF`) para ser ajustado.
