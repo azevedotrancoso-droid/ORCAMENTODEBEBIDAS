@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -22,7 +22,7 @@
 <div id="authView" class="auth-view hidden">
   <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
   <form class="auth-card" id="authForm">
-    <div class="brand-mark">OB</div>
+    <div class="brand-mark logo"><svg class="logo-svg" viewBox="0 0 64 64" role="img" aria-label="Orçamento de Bebidas"><rect x="6.5" y="6.5" width="51" height="51" rx="15" fill="#183b5f" stroke="#ffffff26"/><rect x="19" y="19" width="8.5" height="24.5" rx="2.6" fill="#fff"/><rect x="30.5" y="25" width="8.5" height="18.5" rx="2.6" fill="#fff"/><rect x="42" y="16" width="8.5" height="27.5" rx="2.6" fill="#f39c3c"/><rect x="17" y="46.5" width="34" height="3.6" rx="1.8" fill="#b8cde0"/></svg></div>
     <h1>Orçamento de Bebidas</h1>
     <p class="auth-sub" id="authSub">Entre para acessar seus lançamentos.</p>
     <label>E-mail<input type="email" id="authEmail" autocomplete="email" required></label>
@@ -34,12 +34,12 @@
 </div>
 <div class="app-shell hidden" id="appView">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="brand-mark">OB</div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
+    <div class="brand"><div class="brand-mark logo"><svg class="logo-svg" viewBox="0 0 64 64" role="img" aria-label="Orçamento de Bebidas"><rect x="6.5" y="6.5" width="51" height="51" rx="15" fill="#183b5f" stroke="#ffffff26"/><rect x="19" y="19" width="8.5" height="24.5" rx="2.6" fill="#fff"/><rect x="30.5" y="25" width="8.5" height="18.5" rx="2.6" fill="#fff"/><rect x="42" y="16" width="8.5" height="27.5" rx="2.6" fill="#f39c3c"/><rect x="17" y="46.5" width="34" height="3.6" rx="1.8" fill="#b8cde0"/></svg></div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
     <div class="nav-label">MENU PRINCIPAL</div>
     <nav id="mainNav">
       <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
       <button class="nav-item" data-page="lancamentos"><span>▤</span> Lançamentos</button>
-      <button class="nav-item" data-page="orcamento"><span>◫</span> Orçamento mensal</button>
+      <button class="nav-item" data-page="orcamento"><span>◫</span> Orçamento trimestral</button>
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
       <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
@@ -53,13 +53,13 @@
     <section class="page" id="page-dashboard">
       <div class="page-heading"><div><p class="eyebrow">VISÃO GERAL</p><h1>Dashboard</h1><p class="subheading">Acompanhe seu orçamento e os compromissos de bebidas.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="yearFilter"><option>2026</option><option>2027</option><option>2028</option></select></label></div></div>
       <div class="metric-grid">
-        <article class="metric-card"><div class="metric-top"><span>Orçamento anual</span><span class="metric-icon blue">▣</span></div><strong id="mBudget">R$ 0,00</strong><small>Soma dos 12 meses (12 × orçamento mensal)</small></article>
+        <article class="metric-card"><div class="metric-top"><span>Orçamento anual</span><span class="metric-icon blue">▣</span></div><strong id="mBudget">R$ 0,00</strong><small>Soma dos 4 trimestres (12 meses)</small></article>
         <article class="metric-card"><div class="metric-top"><span>Gasto no ano</span><span class="metric-icon purple">↗</span></div><strong id="mSpent">R$ 0,00</strong><small id="mSpentNote">Lançamentos do ano</small></article>
         <article class="metric-card"><div class="metric-top"><span>Saldo disponível</span><span class="metric-icon green">⌁</span></div><strong id="mBalance">R$ 0,00</strong><small>Orçamento anual menos o gasto</small></article>
         <article class="metric-card"><div class="metric-top"><span>Em aberto</span><span class="metric-icon orange">◷</span></div><strong id="mOpen">R$ 0,00</strong><small id="mOpenNote">Contas pendentes</small></article>
       </div>
       <div class="content-grid charts-grid">
-        <article class="panel chart-panel"><div class="panel-heading"><div><h2>Orçamento x comprometido</h2><p>Visão mensal do ano selecionado</p></div><span class="pill">12 meses</span></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div></article>
+        <article class="panel chart-panel"><div class="panel-heading"><div><h2>Orçamento x comprometido</h2><p>Visão por trimestre do ano selecionado</p></div><span class="pill">4 trimestres</span></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div></article>
         <article class="panel chart-panel"><div class="panel-heading"><div><h2>Gastos por categoria</h2><p>Distribuição dos lançamentos</p></div></div><div class="chart-wrap doughnut-wrap"><canvas id="categoryChart"></canvas></div><div id="categoryLegend" class="category-legend"></div></article>
       </div>
       <article class="panel table-panel"><div class="panel-heading"><div><h2>Próximos vencimentos</h2><p>Contas com vencimento mais próximo</p></div><button class="btn btn-light" data-goto="lancamentos">Ver lançamentos →</button></div><div class="table-scroll"><table><thead><tr><th>Fornecedor</th><th>Nota fiscal</th><th>Categoria</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody id="upcomingBody"></tbody></table></div></article>
@@ -70,9 +70,10 @@
       <article class="panel table-panel"><div class="panel-heading"><div><h2>Todos os lançamentos</h2><p id="entryCount">0 registros</p></div><button class="btn btn-light" id="exportCsv">Exportar Excel ↓</button></div><div class="table-scroll"><table><thead><tr><th>Compra</th><th>Vencimento</th><th>Fornecedor</th><th>NF</th><th>Categoria</th><th>Valor</th><th>Status</th><th></th></tr></thead><tbody id="entriesBody"></tbody></table></div></article>
     </section>
     <section class="page hidden" id="page-orcamento">
-      <div class="page-heading"><div><p class="eyebrow">PLANEJAMENTO</p><h1>Orçamento mensal</h1><p class="subheading">Defina o orçamento-base e ajuste o valor de cada mês quando precisar.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="budgetYear"><option>2026</option><option>2027</option><option>2028</option></select></label><button class="btn btn-primary" id="saveBudget">Salvar orçamento-base</button></div></div>
+      <div class="page-heading"><div><p class="eyebrow">PLANEJAMENTO</p><h1>Orçamento por trimestre</h1><p class="subheading">O orçamento do ano é dividido em 4 trimestres. Defina o orçamento-base e ajuste o valor de cada mês quando precisar.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="budgetYear"><option>2026</option><option>2027</option><option>2028</option></select></label><button class="btn btn-primary" id="saveBudget">Salvar orçamento-base</button></div></div>
       <article class="panel budget-config"><div><label for="monthlyBudget">Orçamento-base mensal (R$)</label><p>Vale para todos os meses sem ajuste. O saldo de cada mês passa para o seguinte: se passar do valor, o excedente é descontado; se sobrar, a sobra é somada.</p></div><div class="budget-input"><span>R$</span><input type="number" min="0" step="0.01" id="monthlyBudget" value="90000"></div></article>
-      <article class="panel table-panel"><div class="panel-heading"><div><h2>Resumo dos 12 meses</h2><p>Altere o valor de um mês e clique em Salvar. O saldo de cada mês (sobra ou excedente) passa para o mês seguinte. Os gastos são calculados pelas datas de vencimento.</p></div></div><div class="table-scroll"><table><thead><tr><th>Mês</th><th>Orçamento do mês</th><th>Saldo do mês anterior</th><th>Disponível no mês</th><th>Comprometido</th><th>Saldo</th><th>% utilizado</th><th>Progresso</th></tr></thead><tbody id="budgetBody"></tbody></table></div></article>
+      <div class="metric-grid quarter-grid" id="quarterCards"></div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h2>Resumo por trimestre</h2><p>Altere o valor de um mês e clique em Salvar. O saldo de cada mês (sobra ou excedente) passa para o mês seguinte. Os gastos são calculados pelas datas de vencimento.</p></div></div><div class="table-scroll"><table><thead><tr><th>Trimestre / Mês</th><th>Orçamento</th><th>Saldo do mês anterior</th><th>Disponível no mês</th><th>Comprometido</th><th>Saldo</th><th>% utilizado</th><th>Progresso</th></tr></thead><tbody id="budgetBody"></tbody></table></div></article>
     </section>
     <section class="page hidden" id="page-categorias">
       <div class="page-heading"><div><p class="eyebrow">COMPOSIÇÃO DOS GASTOS</p><h1>Análise por categoria</h1><p class="subheading">Compare despesas mensais entre grupos de bebidas.</p></div><label class="select-label">Ano <select id="categoryYear"><option>2026</option><option>2027</option><option>2028</option></select></label></div>
@@ -101,7 +102,7 @@
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=3"></script>
-<script src="script.js?v=11"></script>
+<script src="script.js?v=12"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
