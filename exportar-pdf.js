@@ -235,7 +235,7 @@ function build(opt) {
   function pageResumo() {
     let y = newPage(true);
     const kpis = [
-      {l: 'ORÇAMENTO ANUAL', v: money(sum.annual), n: 'Soma dos 12 meses', c: C.blue},
+      {l: 'ORÇAMENTO ANUAL', v: money(sum.annual), n: 'Teto fixo (base mensal × 12)', c: C.blue},
       {l: 'GASTO NO ANO', v: money(sum.spent), n: entries.length + ' lançamento(s) no ano', c: C.purple},
       {l: 'SALDO DISPONÍVEL', v: money(sum.balance), n: 'Orçamento anual menos o gasto', c: C.green, neg: sum.balance < 0},
       {l: 'EM ABERTO', v: money(sum.open), n: openCount + ' conta(s) pendente(s)', c: C.orange}
