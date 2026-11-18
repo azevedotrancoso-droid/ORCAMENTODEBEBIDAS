@@ -243,3 +243,27 @@ html[data-theme="dark"] .ml-row input.ml-nf:focus,html[data-theme="dark"] .ml-ro
 .brand-mark.logo .logo-img{width:100%;height:100%;object-fit:contain;display:block}
 .auth-card .brand-mark.logo{width:110px;height:68px}
 .brand{gap:12px}
+
+/* ===== Malote NF: malote recolhível e botão de nota embaixo ===== */
+.ml-malote-toggle{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1 1 auto;min-width:0;padding:0;margin:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.ml-malote-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+.ml-malote-toggle .ml-chevron{width:20px;height:20px;font-size:12px;background:var(--surface)}
+.ml-malote.is-collapsed .ml-chevron{transform:rotate(-90deg)}
+.ml-malote.is-collapsed .ml-note-row{display:none}
+.ml-group-line .malote-actions{margin-left:auto}
+.ml-add-bottom{margin-top:12px}
+.ml-add-btn{width:100%;height:44px;border-style:dashed;font-weight:700}
+
+/* ===== Malote NF: cada malote em um bloco agrupado + rodapé fixo no formulário ===== */
+.ml-week-cards{display:grid;gap:14px}
+.ml-mcard{border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.ml-mcard-head{background:var(--accent-soft);border-bottom:1px solid var(--line)}
+.ml-mcard.is-collapsed .ml-mcard-head{border-bottom-color:transparent}
+.ml-mcard.is-collapsed .ml-chevron{transform:rotate(-90deg)}
+.ml-mcard.is-collapsed .ml-mcard-body{display:none}
+.ml-mcard .malote-table{min-width:520px}
+.ml-mcard-foot{padding:10px 12px 12px;border-top:1px solid var(--line-soft)}
+.ml-foot-add{width:100%;height:40px;border-style:dashed;font-weight:700}
+.ml-foot{position:sticky;bottom:0;z-index:5;margin-top:14px;padding:12px 0 6px;background:var(--surface);border-top:1px solid var(--line)}
+.ml-foot .ml-add-bottom{margin-top:0}
+.ml-foot .modal-actions{margin-top:12px;padding-top:0;border-top:0}

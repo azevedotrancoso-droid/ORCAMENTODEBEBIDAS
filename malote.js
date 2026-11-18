@@ -9,7 +9,7 @@
   'use strict';
 
   var LS_KEY = 'ob-malote-v1';
-  var S = { malotes: [], notas: [], local: false, editingId: null, removed: [], years: [], collapsed: {} };
+  var S = { malotes: [], notas: [], local: false, editingId: null, removed: [], years: [], collapsed: {}, mcollapsed: {} };
 
   function el(id) { return document.getElementById(id); }
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -196,24 +196,33 @@
       : 'Vencimentos de ' + dateFmt(ds[0]) + ' a ' + dateFmt(ds[ds.length - 1]);
   }
 
+  function maloteClosed(id) {
+    if (S.mcollapsed[id] !== undefined) return S.mcollapsed[id];
+    return !el('mlSearch').value.trim();
+  }
+
   function groupRows(m, ns) {
     var title = m.nome ? esc(m.nome) : 'Malote da ' + m.semana + 'ª semana';
-    var sub = dueRange(ns);
-    var head = '<tr class="ml-group-row"><td colspan="5"><div class="ml-group-line">' +
+    var sub = dueRange(ns), closed = maloteClosed(m.id);
+    var head = '<div class="ml-mcard-head"><div class="ml-group-line">' +
+      '<button type="button" class="ml-malote-toggle" data-ml-mtoggle="' + esc(m.id) + '" aria-expanded="' + (closed ? 'false' : 'true') + '">' +
+      '<span class="ml-chevron" aria-hidden="true">▾</span>' +
       '<span class="ml-group-name">' + title + '</span>' +
       '<span class="ml-badge">' + plural(ns.length, 'nota', 'notas') + '</span>' +
       (sub ? '<span class="ml-group-sub">' + esc(sub) + '</span>' : '') +
+      '</button>' +
       '<span class="malote-actions">' +
-      '<button type="button" class="btn btn-light btn-xs" data-ml-add="' + esc(m.id) + '">＋ Notas</button>' +
       '<button type="button" class="action-btn" title="Editar malote" data-ml-edit="' + esc(m.id) + '">✎</button>' +
-      '<button type="button" class="action-btn" title="Excluir malote" data-ml-del="' + esc(m.id) + '">×</button></span></div></td></tr>';
+      '<button type="button" class="action-btn" title="Excluir malote" data-ml-del="' + esc(m.id) + '">×</button></span></div></div>';
     var rows = ns.length ? ns.map(function (n) {
-      return '<tr><td class="td-main">' + esc(n.nf) + '</td><td class="ml-sup-cell" title="' + esc(n.fornecedor) + '">' + esc(n.fornecedor) + '</td><td>' +
+      return '<tr class="ml-note-row"><td class="td-main">' + esc(n.nf) + '</td><td class="ml-sup-cell" title="' + esc(n.fornecedor) + '">' + esc(n.fornecedor) + '</td><td>' +
         dateFmt(n.data_compra) + '</td><td>' + dateFmt(n.data_vencimento) + '</td><td class="ml-td-actions">' +
         '<button type="button" class="action-btn" title="Editar nota" data-ml-edit-nota="' + esc(m.id) + '|' + esc(n.id) + '">✎</button>' +
         '<button type="button" class="action-btn" title="Excluir nota" data-ml-del-nota="' + esc(n.id) + '">×</button></td></tr>';
-    }).join('') : '<tr><td class="empty-row" colspan="5">Nenhuma nota neste malote.</td></tr>';
-    return head + rows;
+    }).join('') : '<tr class="ml-note-row"><td class="empty-row" colspan="5">Nenhuma nota neste malote.</td></tr>';
+    var body = '<div class="ml-mcard-body"><div class="table-scroll"><table class="malote-table"><thead><tr><th>Nº da NF</th><th>Fornecedor</th><th>Data de compra</th><th>Vencimento</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="ml-mcard-foot"><button type="button" class="btn btn-light ml-foot-add" data-ml-add="' + esc(m.id) + '">＋ Adicionar nota</button></div></div>';
+    return '<div class="ml-mcard ml-malote' + (closed ? ' is-collapsed' : '') + '">' + head + body + '</div>';
   }
 
   /* Agrupa a lista já filtrada: mês -> semana -> malotes */
@@ -239,8 +248,7 @@
       return '<div class="ml-week"><div class="ml-week-head"><h3>' + w.semana + 'ª semana</h3>' +
         (range ? '<span class="ml-week-range">dias ' + range + '</span>' : '') +
         '<span class="ml-week-meta">' + plural(w.items.length, 'malote', 'malotes') + ' · ' + plural(w.notas, 'nota', 'notas') + '</span></div>' +
-        '<div class="panel ml-week-panel"><div class="table-scroll"><table class="malote-table"><thead><tr><th>Nº da NF</th><th>Fornecedor</th><th>Data de compra</th><th>Vencimento</th><th></th></tr></thead><tbody>' +
-        w.items.map(function (x) { return groupRows(x.m, x.ns); }).join('') + '</tbody></table></div></div></div>';
+        '<div class="ml-week-cards">' + w.items.map(function (x) { return groupRows(x.m, x.ns); }).join('') + '</div></div>';
     }).join('');
     return '<section class="ml-month' + (closed ? ' is-collapsed' : '') + '">' +
       '<button type="button" class="ml-month-head" data-ml-toggle="' + g.key + '" aria-expanded="' + (closed ? 'false' : 'true') + '">' +
@@ -266,10 +274,12 @@
   }
 
   function toggleMonth(key) { S.collapsed[key] = !S.collapsed[key]; render(); }
+  function toggleMalote(id) { S.mcollapsed[id] = !maloteClosed(id); render(); }
   function toggleAll() {
-    var keys = groupList(filtered()).map(function (g) { return g.key; });
+    var list = filtered(), keys = groupList(list).map(function (g) { return g.key; });
     var allClosed = keys.length && keys.every(function (k) { return S.collapsed[k]; });
     keys.forEach(function (k) { S.collapsed[k] = !allClosed; });
+    list.forEach(function (m) { S.mcollapsed[m.id] = !allClosed; });
     render();
   }
 
@@ -436,6 +446,7 @@
     el('malotesList').addEventListener('click', function (e) {
       var t;
       if ((t = e.target.closest('[data-ml-toggle]'))) return toggleMonth(t.dataset.mlToggle);
+      if ((t = e.target.closest('[data-ml-mtoggle]'))) return toggleMalote(t.dataset.mlMtoggle);
       if ((t = e.target.closest('[data-ml-add]'))) return openModal(t.dataset.mlAdd, { addBlank: true });
       if ((t = e.target.closest('[data-ml-edit-nota]'))) {
         var p = t.dataset.mlEditNota.split('|');

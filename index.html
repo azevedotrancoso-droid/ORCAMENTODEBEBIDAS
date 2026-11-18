@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -95,13 +95,13 @@
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
-<div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3><button type="button" class="btn btn-light btn-xs" id="mlAddRow">＋ Adicionar nota</button></div><div class="ml-rows" id="mlRows"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></form></section></div>
+<div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3></div><div class="ml-rows" id="mlRows"></div><div class="ml-foot"><div class="ml-add-bottom"><button type="button" class="btn btn-light ml-add-btn" id="mlAddRow">＋ Adicionar nota</button></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></div></form></section></div>
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=2"></script>
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
-<script src="malote.js?v=3"></script>
+<script src="malote.js?v=5"></script>
 <script src="logo-pdf.js?v=1"></script>
 <script src="script.js?v=14"></script>
 <script src="pwa.js?v=1"></script>
