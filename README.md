@@ -55,3 +55,12 @@ Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote te
 
 **Antes de usar:** rode o arquivo `malote.sql` uma vez no SQL Editor do Supabase. Sem isso a aba
 funciona, mas salva só no aparelho atual (um aviso aparece na tela).
+
+## Módulos
+O site tem dois módulos, com troca em 1 clique:
+- **Orçamento de Bebidas**: Dashboard, Lançamentos, Orçamento trimestral, Análise por categoria, Relatórios e Malote NF.
+- **Administrativo**: relatórios de Não Conformidade (RNC) e de Recusa e Devolução de Mercadorias (RDM), numerados, salvos e com PDF.
+
+Como trocar: botões **Módulo** no topo do menu lateral (no celular, a barra logo abaixo do topo) ou atalhos **Alt+1** e **Alt+2**. O site lembra o último módulo e a última página de cada um.
+Para o Administrativo salvar online, rode `administrativo.sql` uma vez no SQL Editor do Supabase (sem isso ele salva só no aparelho e avisa na tela).
+Para criar um módulo novo, veja o comentário no início de `modulos.js`.
