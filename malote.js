@@ -1,4 +1,4 @@
-/* Aba "Malote NF" — Orçamento de Bebidas
+/* Aba "Malote NF" — módulo Administrativo
  * - Um malote agrupa várias notas fiscais de uma semana do mês.
  * - Cada nota: número da NF, fornecedor, data de compra e data de vencimento.
  * - Dados no Supabase (tabelas orc_malotes e orc_malote_notas — veja malote.sql).

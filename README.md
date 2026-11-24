@@ -47,7 +47,7 @@ Notas cuja data de vencimento chegou passam sozinhas para PAGO: o Supabase faz i
 ## Vários usuários
 Os dados pertencem a um "espaço de trabalho" do dono. Para dar acesso a outra pessoa, ela cria conta no site e depois se cadastra na tabela `orc_membros` do Supabase (user_id = id dela, dono_id = id do dono). Quem não está na tabela vê só os próprios dados (vazio).
 
-## Malote NF (nova aba)
+## Malote NF (módulo Administrativo)
 
 Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote tem mês, ano e semana
 (1ª = dias 1–7, 2ª = 8–14, 3ª = 15–21, 4ª = 22–28, 5ª = 29 até o fim do mês) e várias notas
@@ -57,12 +57,10 @@ Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote te
 funciona, mas salva só no aparelho atual (um aviso aparece na tela).
 
 ## Módulos
-Depois do login aparece a tela **"Escolha o módulo que você quer usar agora"**, com um card por módulo:
-- **Orçamento de Bebidas**: Dashboard, Lançamentos, Orçamento trimestral, Análise por categoria, Relatórios e Malote NF.
-- **Administrativo**: relatórios de Não Conformidade (RNC) e de Recusa e Devolução de Mercadorias (RDM), numerados, salvos e com PDF.
+Depois do login aparece a tela **"Escolha o módulo que você quer usar agora"**, com um card por módulo. Os módulos são separados: cada um mostra só o próprio menu e as próprias páginas.
+- **Orçamento de Bebidas**: Dashboard, Lançamentos, Orçamento trimestral, Análise por categoria e Relatórios.
+- **Administrativo**: Malote NF.
 
-Dentro do site, o botão **Todos os módulos** (topo do menu lateral; no celular, o ícone de grade na barra abaixo do topo) volta para a seleção (atalho **Alt+0**).
-Para trocar direto de um módulo para o outro, use os botões **Módulo** do menu lateral (ou a barra no celular) ou **Alt+1** / **Alt+2**.
+Para trocar de módulo, use o botão **Todos os módulos** (topo do menu lateral, atalho **Alt+0**) e escolha o outro card.
 O site lembra a última página de cada módulo. Recarregar a página mantém o módulo; uma nova visita começa na seleção.
-Para o Administrativo salvar online, rode `administrativo.sql` uma vez no SQL Editor do Supabase (sem isso ele salva só no aparelho e avisa na tela).
 Para criar um módulo novo, veja o comentário no início de `modulos.js`.

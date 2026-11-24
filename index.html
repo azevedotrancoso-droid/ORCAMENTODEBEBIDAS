@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -34,7 +34,7 @@
 </div>
 <div class="hub-view hidden" id="hubView">
   <header class="hub-top">
-    <div class="hub-brand"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"><span class="hub-sep" aria-hidden="true"></span><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira e administrativa</small></div></div>
+    <div class="hub-brand"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"><span class="hub-sep" aria-hidden="true"></span><div><strong>Grupo ilha</strong><small>Escolha o módulo de trabalho</small></div></div>
     <div class="hub-user"><div class="hub-who"><b id="hubName"></b><small id="hubEmail"></small></div>
       <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
       <button type="button" class="hub-icon-btn" id="hubLogout" title="Sair" aria-label="Sair"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
@@ -48,13 +48,8 @@
 </div>
 <div class="app-shell hidden" id="appView">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="brand-mark logo"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"></div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
+    <div class="brand"><div class="brand-mark logo"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"></div><div><strong id="brandName">Orçamento de Bebidas</strong><small id="brandSub">Gestão financeira</small></div></div>
     <button type="button" class="hub-back" data-hub-home title="Voltar à seleção de módulos (Alt + 0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Todos os módulos</span></button>
-    <div class="nav-label">MÓDULO</div>
-    <div class="module-switch" id="moduleSwitch" role="tablist" aria-label="Trocar de módulo">
-      <button type="button" class="module-btn active" data-module="orcamento" role="tab" aria-selected="true" title="Alt + 1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M2 20h20"/></svg><span>Orçamento de Bebidas</span><kbd>Alt 1</kbd></button>
-      <button type="button" class="module-btn" data-module="administrativo" role="tab" aria-selected="false" title="Alt + 2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg><span>Administrativo</span><kbd>Alt 2</kbd></button>
-    </div>
     <div class="nav-label" id="navLabel">MENU PRINCIPAL</div>
     <nav id="mainNav" data-module-nav="orcamento">
       <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
@@ -62,10 +57,9 @@
       <button class="nav-item" data-page="orcamento"><span>◫</span> Orçamento trimestral</button>
       <button class="nav-item" data-page="categorias"><span>◉</span> Análise por categoria</button>
       <button class="nav-item" data-page="relatorios"><span>▥</span> Relatórios</button>
-      <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
     </nav>
     <nav id="admNav" data-module-nav="administrativo" class="hidden">
-      <button class="nav-item" data-page="administrativo"><span>▤</span> Relatórios RNC / RDM</button>
+      <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
     </nav>
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
@@ -73,11 +67,6 @@
   <main class="main-area">
     <div class="offline-banner" id="offlineBanner" role="status" hidden>Sem conexão. Lançamentos e login só funcionam com internet.</div>
     <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb"><em class="crumb-mod" id="crumbMod">Orçamento de Bebidas</em> <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
-    <div class="module-bar" id="moduleBar" role="tablist" aria-label="Trocar de módulo">
-      <button type="button" class="module-btn module-home" data-hub-home aria-label="Todos os módulos" title="Todos os módulos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
-      <button type="button" class="module-btn active" data-module="orcamento" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M2 20h20"/></svg><span>Orçamento</span></button>
-      <button type="button" class="module-btn" data-module="administrativo" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg><span>Administrativo</span></button>
-    </div>
     <section class="page" id="page-dashboard">
       <div class="page-heading"><div><p class="eyebrow">VISÃO GERAL</p><h1>Dashboard</h1><p class="subheading">Acompanhe seu orçamento e os compromissos de bebidas.</p></div><div class="heading-actions"><label class="select-label">Ano <select id="yearFilter"><option>2026</option><option>2027</option><option>2028</option></select></label></div></div>
       <div class="metric-grid">
@@ -120,30 +109,19 @@
       <div class="ml-summary"><p class="ml-count" id="mlCount"></p><button type="button" class="btn btn-light btn-xs hidden" id="mlToggleAll">Recolher tudo</button></div>
       <div class="malote-list" id="malotesList"></div>
     </section>
-    <section class="page hidden" id="page-administrativo">
-      <div class="page-heading"><div><p class="eyebrow">MÓDULO ADMINISTRATIVO</p><h1>Relatórios RNC e Recusa/Devolução</h1><p class="subheading">Relatórios de não conformidade (RNC) e de recusa e devolução de mercadorias (RDM), numerados, salvos de forma organizada e com PDF de cada um.</p></div><div class="heading-actions adm-head-actions"><button type="button" class="btn btn-light" id="admNewRNC">＋ Novo RNC</button><button type="button" class="btn btn-primary" id="admNewRDM">＋ Recusa / devolução</button></div></div>
-      <article class="panel warning-panel ml-banner hidden" id="admBanner"><strong>Salvando somente neste aparelho</strong><p>A tabela dos relatórios administrativos ainda não existe no Supabase. Rode o arquivo <b>administrativo.sql</b> no SQL Editor do Supabase e recarregue a página para os relatórios ficarem salvos online e compartilhados.</p></article>
-      <div class="metric-grid" id="admCards"></div>
-      <div class="toolbar panel"><div class="adm-tabs" role="tablist"><button type="button" class="adm-tab active" data-adm-tab="all">Todos</button><button type="button" class="adm-tab" data-adm-tab="RNC">RNC</button><button type="button" class="adm-tab" data-adm-tab="RDM">Recusa e devolução</button></div><div class="searchbox"><span>⌕</span><input id="admSearch" placeholder="Buscar número, fornecedor ou NF..."></div><select id="admYear" aria-label="Ano"></select><select id="admStatus" aria-label="Status"></select></div>
-      <div class="ml-summary"><p class="ml-count" id="admCount"></p><button type="button" class="btn btn-light btn-xs" id="admIndexPdf">Índice em PDF ↓</button></div>
-      <div class="malote-list" id="admList"></div>
-    </section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
 <div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3></div><div class="ml-rows" id="mlRows"></div><div class="ml-foot"><div class="ml-add-bottom"><button type="button" class="btn btn-light ml-add-btn" id="mlAddRow">＋ Adicionar nota</button></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></div></form></section></div>
-<div class="modal-backdrop hidden" id="admModal"><section class="modal modal-wide adm-modal"><div class="modal-head"><div><p class="eyebrow" id="admEyebrow">NOVO RELATÓRIO</p><h2 id="admModalTitle">Relatório</h2></div><button type="button" class="close-modal" id="admClose" aria-label="Fechar">×</button></div><form id="admForm" novalidate></form></section></div>
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=2"></script>
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=5"></script>
-<script src="administrativo-pdf.js?v=1"></script>
-<script src="administrativo.js?v=1"></script>
 <script src="logo-pdf.js?v=1"></script>
-<script src="script.js?v=16"></script>
-<script src="modulos.js?v=2"></script>
+<script src="script.js?v=17"></script>
+<script src="modulos.js?v=3"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */

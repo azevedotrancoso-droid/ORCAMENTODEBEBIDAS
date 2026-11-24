@@ -1,6 +1,6 @@
 /* Módulos do site — tela "Escolha o módulo" + troca rápida entre módulos
  * - Depois do login aparece a seleção de módulos (cards). Dentro do site, o botão "Todos os módulos" volta para ela (Alt+0).
- * - Troca rápida sem voltar à seleção: botões do topo do menu lateral (celular: barra abaixo do topo) ou Alt+1 / Alt+2.
+ * - Os módulos são separados: cada um mostra só o próprio menu e as próprias páginas.
  * - Cada módulo tem o próprio menu; o site lembra a última página de cada módulo.
  * - Recarregar a página (F5) mantém você no módulo atual; uma nova visita/aba começa na seleção.
  * - Para criar um módulo novo: adicione em MODS e PAGE_MOD, um botão data-module e um <nav data-module-nav> no index.html.
@@ -13,12 +13,12 @@
     administrativo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg>'
   };
   var MODS = {
-    orcamento: {name: 'Orçamento de Bebidas', tag: 'Financeiro', home: 'dashboard', nav: 'mainNav', label: 'MENU PRINCIPAL', quickAdd: true,
-      desc: 'Lançamentos de NF, orçamento trimestral, análise por categoria, relatórios em PDF e malote de notas.'},
-    administrativo: {name: 'Administrativo', tag: 'Qualidade', home: 'administrativo', nav: 'admNav', label: 'MENU ADMINISTRATIVO', quickAdd: false,
-      desc: 'Relatórios de não conformidade (RNC) e de recusa e devolução de mercadorias, com PDF de cada um.'}
+    orcamento: {name: 'Orçamento de Bebidas', sub: 'Gestão financeira', tag: 'Financeiro', home: 'dashboard', nav: 'mainNav', label: 'MENU PRINCIPAL', quickAdd: true,
+      desc: 'Lançamentos de NF, orçamento trimestral, análise por categoria e relatórios em PDF e Excel.'},
+    administrativo: {name: 'Administrativo', sub: 'Gestão administrativa', tag: 'Notas fiscais', home: 'malote', nav: 'admNav', label: 'MENU ADMINISTRATIVO', quickAdd: false,
+      desc: 'Malote NF: agrupe as notas fiscais por semana do mês e lance várias notas no mesmo malote.'}
   };
-  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'orcamento', administrativo: 'administrativo'};
+  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'administrativo'};
   var KEY = 'ob-module', KEY_PAGES = 'ob-module-pages', CHOSEN = 'ob-hub-chosen';
   var cur = 'orcamento', last = {}, user = null;
 
@@ -62,7 +62,7 @@
     ss(CHOSEN, null);
     $('appView').classList.add('hidden');
     $('hubView').classList.remove('hidden');
-    document.title = 'Módulos | Orçamento de Bebidas';
+    document.title = 'Módulos | Gestão';
     window.scrollTo(0, 0);
   }
   function openModule(m) {
@@ -92,12 +92,9 @@
     Object.keys(MODS).forEach(function (k) {
       var nav = $(MODS[k].nav); if (nav) nav.classList.toggle('hidden', k !== m);
     });
-    document.querySelectorAll('[data-module]').forEach(function (b) {
-      var on = b.dataset.module === m;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
     if ($('navLabel')) $('navLabel').textContent = cfg.label;
+    if ($('brandName')) $('brandName').textContent = cfg.name;
+    if ($('brandSub')) $('brandSub').textContent = cfg.sub;
     if ($('crumbMod')) $('crumbMod').textContent = cfg.name;
     if ($('quickAdd')) $('quickAdd').classList.toggle('hidden', !cfg.quickAdd);
     if ($('appView')) $('appView').setAttribute('data-module', m);
@@ -127,19 +124,13 @@
     var b = ev.target.closest('[data-hub-open]'); if (b) openModule(b.dataset.hubOpen);
   });
   document.querySelectorAll('[data-hub-home]').forEach(function (b) { b.addEventListener('click', showHub); });
-  document.querySelectorAll('[data-module]').forEach(function (b) {
-    b.addEventListener('click', function () { if (b.dataset.module !== cur) setModule(b.dataset.module); });
-  });
   $('hubLogout').addEventListener('click', function () { var l = $('logoutBtn'); if (l) l.click(); });
 
   document.addEventListener('keydown', function (ev) {
     if (!ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
     var app = $('appView'); if (!app || app.classList.contains('hidden')) return;
-    var map = {Digit1: 'orcamento', Digit2: 'administrativo', Numpad1: 'orcamento', Numpad2: 'administrativo'};
-    if (ev.code === 'Digit0' || ev.code === 'Numpad0') { ev.preventDefault(); return showHub(); }
-    var m = map[ev.code];
-    if (m && m !== cur) { ev.preventDefault(); setModule(m); }
+    if (ev.code === 'Digit0' || ev.code === 'Numpad0') { ev.preventDefault(); showHub(); }
   });
 
-  window.Modulos = {enter: enter, leave: leave, hub: showHub, open: openModule, set: setModule, current: function () { return cur; }};
+  window.Modulos = {enter: enter, leave: leave, hub: showHub, open: openModule, current: function () { return cur; }};
 })();
