@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style.css?v=18">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -32,9 +32,24 @@
     <p class="auth-msg" id="authMsg"></p>
   </form>
 </div>
+<div class="hub-view hidden" id="hubView">
+  <header class="hub-top">
+    <div class="hub-brand"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"><span class="hub-sep" aria-hidden="true"></span><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira e administrativa</small></div></div>
+    <div class="hub-user"><div class="hub-who"><b id="hubName"></b><small id="hubEmail"></small></div>
+      <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+      <button type="button" class="hub-icon-btn" id="hubLogout" title="Sair" aria-label="Sair"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
+    </div>
+  </header>
+  <main class="hub-main">
+    <h1 id="hubHello">Olá!</h1>
+    <p class="hub-sub">Escolha o módulo que você quer usar agora.</p>
+    <div class="hub-grid" id="hubGrid"></div>
+  </main>
+</div>
 <div class="app-shell hidden" id="appView">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="brand-mark logo"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"></div><div><strong>Orçamento de Bebidas</strong><small>Gestão financeira</small></div></div>
+    <button type="button" class="hub-back" data-hub-home title="Voltar à seleção de módulos (Alt + 0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Todos os módulos</span></button>
     <div class="nav-label">MÓDULO</div>
     <div class="module-switch" id="moduleSwitch" role="tablist" aria-label="Trocar de módulo">
       <button type="button" class="module-btn active" data-module="orcamento" role="tab" aria-selected="true" title="Alt + 1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M2 20h20"/></svg><span>Orçamento de Bebidas</span><kbd>Alt 1</kbd></button>
@@ -59,6 +74,7 @@
     <div class="offline-banner" id="offlineBanner" role="status" hidden>Sem conexão. Lançamentos e login só funcionam com internet.</div>
     <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb"><em class="crumb-mod" id="crumbMod">Orçamento de Bebidas</em> <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
     <div class="module-bar" id="moduleBar" role="tablist" aria-label="Trocar de módulo">
+      <button type="button" class="module-btn module-home" data-hub-home aria-label="Todos os módulos" title="Todos os módulos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
       <button type="button" class="module-btn active" data-module="orcamento" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M2 20h20"/></svg><span>Orçamento</span></button>
       <button type="button" class="module-btn" data-module="administrativo" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg><span>Administrativo</span></button>
     </div>
@@ -126,8 +142,8 @@
 <script src="administrativo-pdf.js?v=1"></script>
 <script src="administrativo.js?v=1"></script>
 <script src="logo-pdf.js?v=1"></script>
-<script src="script.js?v=15"></script>
-<script src="modulos.js?v=1"></script>
+<script src="script.js?v=16"></script>
+<script src="modulos.js?v=2"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */

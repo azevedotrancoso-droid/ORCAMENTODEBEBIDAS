@@ -57,10 +57,12 @@ Aba no fim do menu para agrupar notas fiscais por semana do mês. Cada malote te
 funciona, mas salva só no aparelho atual (um aviso aparece na tela).
 
 ## Módulos
-O site tem dois módulos, com troca em 1 clique:
+Depois do login aparece a tela **"Escolha o módulo que você quer usar agora"**, com um card por módulo:
 - **Orçamento de Bebidas**: Dashboard, Lançamentos, Orçamento trimestral, Análise por categoria, Relatórios e Malote NF.
 - **Administrativo**: relatórios de Não Conformidade (RNC) e de Recusa e Devolução de Mercadorias (RDM), numerados, salvos e com PDF.
 
-Como trocar: botões **Módulo** no topo do menu lateral (no celular, a barra logo abaixo do topo) ou atalhos **Alt+1** e **Alt+2**. O site lembra o último módulo e a última página de cada um.
+Dentro do site, o botão **Todos os módulos** (topo do menu lateral; no celular, o ícone de grade na barra abaixo do topo) volta para a seleção (atalho **Alt+0**).
+Para trocar direto de um módulo para o outro, use os botões **Módulo** do menu lateral (ou a barra no celular) ou **Alt+1** / **Alt+2**.
+O site lembra a última página de cada módulo. Recarregar a página mantém o módulo; uma nova visita começa na seleção.
 Para o Administrativo salvar online, rode `administrativo.sql` uma vez no SQL Editor do Supabase (sem isso ele salva só no aparelho e avisa na tela).
 Para criar um módulo novo, veja o comentário no início de `modulos.js`.
