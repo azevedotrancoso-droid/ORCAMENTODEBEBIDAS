@@ -59,7 +59,7 @@ funciona, mas salva só no aparelho atual (um aviso aparece na tela).
 ## Módulos
 Depois do login aparece a tela **"Escolha o módulo que você quer usar agora"**, com um card por módulo. Os módulos são separados: cada um mostra só o próprio menu e as próprias páginas.
 - **Orçamento de Bebidas**: Dashboard, Lançamentos, Orçamento trimestral, Análise por categoria e Relatórios.
-- **Administrativo**: Malote NF.
+- **Administrativo**: Malote NF e Nota de Recusa e Devolução de Mercadoria (formulário com prévia ao vivo e PDF A4, no mesmo modelo do documento original).
 
 Para trocar de módulo, use o botão **Todos os módulos** (topo do menu lateral, atalho **Alt+0**) e escolha o outro card.
 O site lembra a última página de cada módulo. Recarregar a página mantém o módulo; uma nova visita começa na seleção.

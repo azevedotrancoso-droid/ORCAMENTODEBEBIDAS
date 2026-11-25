@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=20">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -60,6 +60,7 @@
     </nav>
     <nav id="admNav" data-module-nav="administrativo" class="hidden">
       <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
+      <button class="nav-item" data-page="recusa"><span>▤</span> Nota de Recusa</button>
     </nav>
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
@@ -109,6 +110,49 @@
       <div class="ml-summary"><p class="ml-count" id="mlCount"></p><button type="button" class="btn btn-light btn-xs hidden" id="mlToggleAll">Recolher tudo</button></div>
       <div class="malote-list" id="malotesList"></div>
     </section>
+    <section class="page hidden" id="page-recusa">
+      <div class="page-heading"><div><p class="eyebrow">DOCUMENTOS</p><h1>Nota de Recusa e Devolução</h1><p class="subheading">Preencha os dados, confira a prévia ao lado e gere o PDF da nota de recusa e devolução de mercadoria.</p></div><div class="heading-actions nr-actions"><button type="button" class="btn btn-light" id="nrClear">Limpar</button><button type="button" class="btn btn-light" id="nrPrint">Abrir / imprimir</button><button type="button" class="btn btn-primary" id="nrPdf">Baixar PDF ↓</button></div></div>
+      <div class="nr-layout">
+        <form class="panel nr-form" id="nrForm" autocomplete="off" novalidate>
+          <fieldset class="nr-sec"><legend><b>1</b> Cabeçalho</legend><div class="nr-grid">
+            <label class="nr-f w6"><span>Empresa</span><input data-k="empresa" type="text" placeholder="Nome da empresa destinatária"></label>
+            <label class="nr-f w3"><span>Data da nota</span><input data-k="data" type="date" class="js-date"></label>
+            <label class="nr-f w3"><span>Local</span><input data-k="local" type="text"></label>
+            <label class="nr-f w6"><span>Data em que a mercadoria foi recebida</span><input data-k="recebimento" type="date" class="js-date"></label>
+          </div></fieldset>
+          <fieldset class="nr-sec"><legend><b>2</b> Dados do reclamante</legend><div class="nr-grid">
+            <label class="nr-f w12"><span>Nome completo</span><input data-k="nome" type="text"></label>
+            <label class="nr-f w4"><span>CPF</span><input data-k="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00"></label>
+            <label class="nr-f w8"><span>Endereço</span><input data-k="endereco" type="text"></label>
+            <label class="nr-f w5"><span>Telefone</span><input data-k="telefone" type="text" inputmode="tel"></label>
+            <label class="nr-f w7"><span>E-mail</span><input data-k="email" type="email"></label>
+          </div></fieldset>
+          <fieldset class="nr-sec"><legend><b>3</b> Detalhes da mercadoria</legend><div class="nr-grid">
+            <label class="nr-f w12"><span>Descrição / nome do produto</span><input data-k="produto" type="text"></label>
+            <label class="nr-f w8"><span>Nota fiscal / NF-e nº</span><input data-k="nf" type="text"></label>
+            <label class="nr-f w4"><span>Quantidade</span><input data-k="qtd" type="text"></label>
+            <p class="nr-sublabel w12">Motivo da devolução / recusa</p>
+            <div class="nr-checks w12">
+              <label class="nr-chk"><input type="checkbox" data-motivo="0"> Produto com defeito</label>
+              <label class="nr-chk"><input type="checkbox" data-motivo="1"> Produto diferente do pedido</label>
+              <label class="nr-chk"><input type="checkbox" data-motivo="2"> Avarias no transporte</label>
+              <label class="nr-chk"><input type="checkbox" data-motivo="3"> Prazo de validade vencido</label>
+            </div>
+            <label class="nr-f w12"><span>Outro motivo (marca automaticamente “Outro”)</span><input data-k="outro" type="text"></label>
+          </div></fieldset>
+          <fieldset class="nr-sec"><legend><b>4</b> Assinaturas <small>(opcional: deixe em branco para assinar à mão)</small></legend><div class="nr-grid">
+            <p class="nr-sublabel w12">Consumidor</p>
+            <label class="nr-f w7"><span>Nome</span><input data-k="consNome" type="text"></label>
+            <label class="nr-f w5"><span>CPF</span><input data-k="consCpf" type="text" inputmode="numeric"></label>
+            <p class="nr-sublabel w12">Responsável da empresa</p>
+            <label class="nr-f w5"><span>Nome</span><input data-k="respNome" type="text"></label>
+            <label class="nr-f w3"><span>Cargo</span><input data-k="respCargo" type="text"></label>
+            <label class="nr-f w4"><span>Documento / identificação</span><input data-k="respDoc" type="text"></label>
+          </div></fieldset>
+        </form>
+        <aside class="nr-preview"><p class="nr-prev-label">PRÉVIA DA NOTA</p><div class="nr-paper" id="nrPaper"></div></aside>
+      </div>
+    </section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
@@ -119,9 +163,10 @@
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=5"></script>
+<script src="nota-recusa.js?v=1"></script>
 <script src="logo-pdf.js?v=1"></script>
-<script src="script.js?v=17"></script>
-<script src="modulos.js?v=3"></script>
+<script src="script.js?v=18"></script>
+<script src="modulos.js?v=4"></script>
 <script src="pwa.js?v=1"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */

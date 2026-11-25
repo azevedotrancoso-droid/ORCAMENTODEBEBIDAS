@@ -15,10 +15,10 @@
   var MODS = {
     orcamento: {name: 'Orçamento de Bebidas', sub: 'Gestão financeira', tag: 'Financeiro', home: 'dashboard', nav: 'mainNav', label: 'MENU PRINCIPAL', quickAdd: true,
       desc: 'Lançamentos de NF, orçamento trimestral, análise por categoria e relatórios em PDF e Excel.'},
-    administrativo: {name: 'Administrativo', sub: 'Gestão administrativa', tag: 'Notas fiscais', home: 'malote', nav: 'admNav', label: 'MENU ADMINISTRATIVO', quickAdd: false,
-      desc: 'Malote NF: agrupe as notas fiscais por semana do mês e lance várias notas no mesmo malote.'}
+    administrativo: {name: 'Administrativo', sub: 'Gestão administrativa', tag: 'Documentos', home: 'malote', nav: 'admNav', label: 'MENU ADMINISTRATIVO', quickAdd: false,
+      desc: 'Malote NF por semana do mês e Nota de Recusa e Devolução de mercadoria, com PDF.'}
   };
-  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'administrativo'};
+  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'administrativo', recusa: 'administrativo'};
   var KEY = 'ob-module', KEY_PAGES = 'ob-module-pages', CHOSEN = 'ob-hub-chosen';
   var cur = 'orcamento', last = {}, user = null;
 
