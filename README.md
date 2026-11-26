@@ -64,3 +64,11 @@ Depois do login aparece a tela **"Escolha o módulo que você quer usar agora"**
 Para trocar de módulo, use o botão **Todos os módulos** (topo do menu lateral, atalho **Alt+0**) e escolha o outro card.
 O site lembra a última página de cada módulo. Recarregar a página mantém o módulo; uma nova visita começa na seleção.
 Para criar um módulo novo, veja o comentário no início de `modulos.js`.
+
+## PWA / Android
+- **Instalar:** no Android o botão "Instalar aplicativo" aparece no menu lateral e na tela de módulos (ou use ⋮ → "Instalar aplicativo" no Chrome). Os atalhos do ícone (segurar o ícone do app) abrem direto: Novo lançamento, Malote NF, Nota de Recusa e Dashboard.
+- **Botão Voltar do Android:** fecha o menu ou o formulário aberto, volta para a página anterior e depois para a seleção de módulos; só então sai do app. Recarregar mantém você na mesma página.
+- **Tela:** respeita a barra de status e a barra de gestos (áreas seguras), usa `100dvh`, formulários abrem como "folha" na parte de baixo do celular, campos e botões com no mínimo 44 px de toque e fonte de 16 px nos campos (evita o zoom automático).
+- **Ícones:** `icon-192/512` (padrão), `icon-maskable-192/512` (formato adaptável do Android) e `icon-monochrome-512` (ícone temático do Android 13+).
+- **Atualização:** quando há versão nova aparece a barra "Nova versão do aplicativo disponível. Atualizar". O app confere se há versão nova ao voltar para ele.
+- **Para publicar uma versão nova:** aumente o número em `CACHE_NAME` no `sw.js` (v19 → v20) e o `?v=` dos arquivos alterados no `index.html`.

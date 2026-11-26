@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#102b46" id="metaThemeColor">
   <script>(function(){var t="light";try{var s=localStorage.getItem("ob-theme");if(s==="light"||s==="dark")t=s;else if(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark"}catch(e){}document.documentElement.setAttribute("data-theme",t);var m=document.getElementById("metaThemeColor");if(m)m.setAttribute("content",t==="dark"?"#0a1322":"#102b46")})();</script><title>Orçamento de Bebidas | Gestão</title>
@@ -10,10 +10,15 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Orçamento">
   <meta name="application-name" content="Orçamento de Bebidas">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css?v=23">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -35,7 +40,7 @@
 <div class="hub-view hidden" id="hubView">
   <header class="hub-top">
     <div class="hub-brand"><img class="logo-img" src="logo-ilha.png" alt="ilhu" width="64" height="40"><span class="hub-sep" aria-hidden="true"></span><div><strong>Grupo ilha</strong><small>Escolha o módulo de trabalho</small></div></div>
-    <div class="hub-user"><div class="hub-who"><b id="hubName"></b><small id="hubEmail"></small></div>
+    <div class="hub-user"><button type="button" class="hub-install" id="installHub" hidden>Instalar app</button><div class="hub-who"><b id="hubName"></b><small id="hubEmail"></small></div>
       <button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
       <button type="button" class="hub-icon-btn" id="hubLogout" title="Sair" aria-label="Sair"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
     </div>
@@ -65,6 +70,7 @@
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
   </aside>
+    <div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
   <main class="main-area">
     <div class="offline-banner" id="offlineBanner" role="status" hidden>Sem conexão. Lançamentos e login só funcionam com internet.</div>
     <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div class="breadcrumb"><em class="crumb-mod" id="crumbMod">Orçamento de Bebidas</em> <span>/</span> <b id="crumb">Dashboard</b></div><div class="top-actions"><span class="today" id="today"></span><button type="button" class="theme-toggle js-theme-toggle" aria-label="Ativar tema escuro" title="Alternar tema"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
@@ -111,7 +117,7 @@
       <div class="malote-list" id="malotesList"></div>
     </section>
     <section class="page hidden" id="page-recusa">
-      <div class="page-heading"><div><p class="eyebrow">DOCUMENTOS</p><h1>Nota de Recusa e Devolução</h1><p class="subheading">Preencha os dados, confira a prévia ao lado e gere o PDF da nota de recusa e devolução de mercadoria.</p></div><div class="heading-actions nr-actions"><button type="button" class="btn btn-light" id="nrClear">Limpar</button><button type="button" class="btn btn-light" id="nrPrint">Abrir / imprimir</button><button type="button" class="btn btn-primary" id="nrPdf">Baixar PDF ↓</button></div></div>
+      <div class="page-heading"><div><p class="eyebrow">DOCUMENTOS</p><h1>Nota de Recusa e Devolução</h1><p class="subheading">Preencha os dados, confira a prévia ao lado e gere o PDF da nota de recusa e devolução de mercadoria.</p></div><div class="heading-actions nr-actions"><button type="button" class="btn btn-light" id="nrClear">Limpar</button><button type="button" class="btn btn-light" id="nrShare" hidden>Compartilhar</button><button type="button" class="btn btn-light" id="nrPrint">Abrir / imprimir</button><button type="button" class="btn btn-primary" id="nrPdf">Baixar PDF ↓</button></div></div>
       <div class="nr-layout">
         <form class="panel nr-form" id="nrForm" autocomplete="off" novalidate>
           <fieldset class="nr-sec"><legend><b>1</b> Cabeçalho</legend><div class="nr-grid">
@@ -163,11 +169,11 @@
 <script src="tema.js?v=1"></script>
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=5"></script>
-<script src="nota-recusa.js?v=1"></script>
+<script src="nota-recusa.js?v=2"></script>
 <script src="logo-pdf.js?v=1"></script>
-<script src="script.js?v=18"></script>
-<script src="modulos.js?v=4"></script>
-<script src="pwa.js?v=1"></script>
+<script src="script.js?v=19"></script>
+<script src="modulos.js?v=5"></script>
+<script src="pwa.js?v=2"></script>
 <script>
 /* Aviso caso o sistema não carregue (nunca deixa a tela em branco) */
 setTimeout(function(){
