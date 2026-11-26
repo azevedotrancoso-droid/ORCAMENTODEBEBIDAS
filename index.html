@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="style.css?v=23">
+  <link rel="stylesheet" href="style.css?v=25">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -66,6 +66,14 @@
     <nav id="admNav" data-module-nav="administrativo" class="hidden">
       <button class="nav-item" data-page="malote"><span>▧</span> Malote NF</button>
       <button class="nav-item" data-page="recusa"><span>▤</span> Nota de Recusa</button>
+    </nav>
+    <nav id="rotNav" data-module-nav="rotina" class="hidden">
+      <button class="nav-item" data-page="rotina-geral"><span>▦</span> Visão geral</button>
+      <button class="nav-item" data-page="rotina-dia"><span>◷</span> Demandas do dia</button>
+      <button class="nav-item" data-page="rotina-semana"><span>▤</span> Demandas da semana</button>
+      <button class="nav-item" data-page="rotina-mes"><span>▥</span> Demandas do mês</button>
+      <button class="nav-item" data-page="rotina-calendario"><span>▣</span> Calendário</button>
+      <button class="nav-item" data-page="rotina-notas"><span>✎</span> Anotações</button>
     </nav>
     <button type="button" class="install-btn" id="installApp" hidden>Instalar aplicativo</button>
     <div class="sidebar-bottom"><div class="status-dot"></div><div><b>Conta conectada</b><small id="userEmail"></small></div><button class="logout-btn" id="logoutBtn" title="Sair">Sair</button></div>
@@ -159,10 +167,41 @@
         <aside class="nr-preview"><p class="nr-prev-label">PRÉVIA DA NOTA</p><div class="nr-paper" id="nrPaper"></div></aside>
       </div>
     </section>
+    <section class="page hidden" id="page-rotina-geral"></section>
+    <section class="page hidden" id="page-rotina-dia"></section>
+    <section class="page hidden" id="page-rotina-semana"></section>
+    <section class="page hidden" id="page-rotina-mes"></section>
+    <section class="page hidden" id="page-rotina-calendario"></section>
+    <section class="page hidden" id="page-rotina-notas"></section>
   </main>
 </div>
 <div class="modal-backdrop hidden" id="entryModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2 id="modalTitle">Cadastrar lançamento</h2></div><button class="close-modal" id="closeModal" aria-label="Fechar">×</button></div><form id="entryForm"><input type="hidden" id="entryId"><div class="form-grid"><label>Data da compra<input type="date" id="purchaseDate" class="js-date" required></label><label>Data de vencimento<input type="date" id="dueDate" class="js-date" required></label><label class="span-2">Fornecedor<input id="supplier" maxlength="120" placeholder="Nome do fornecedor" required></label><label>Número da NF<input id="invoice" maxlength="60" placeholder="Ex.: 12345"></label><label>Categoria<select id="entryCategory" required></select></label><label>Valor (R$)<input type="number" id="amount" min="0.01" step="0.01" placeholder="0,00" required></label><label>Status<select id="entryStatus"><option value="EM ABERTO">Em aberto</option><option value="PAGO">Pago</option></select></label></div><div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar lançamento</button></div></form></section></div>
 <div class="modal-backdrop hidden" id="maloteModal"><section class="modal modal-wide"><div class="modal-head"><div><p class="eyebrow" id="mlEyebrow">NOVO MALOTE</p><h2 id="mlModalTitle">Cadastrar malote</h2></div><button type="button" class="close-modal" id="mlClose" aria-label="Fechar">×</button></div><form id="maloteForm" novalidate><div class="form-grid ml-meta"><label>Mês<select id="mlFMonth"></select></label><label>Ano<select id="mlFYear"></select></label><label>Semana do mês<select id="mlFWeek"></select></label><label>Identificação (opcional)<input id="mlFName" maxlength="80" placeholder="Ex.: Malote 03"></label></div><div class="ml-notes-head"><h3>Notas fiscais do malote <span id="mlNoteCount"></span></h3></div><div class="ml-rows" id="mlRows"></div><div class="ml-foot"><div class="ml-add-bottom"><button type="button" class="btn btn-light ml-add-btn" id="mlAddRow">＋ Adicionar nota</button></div><div class="modal-actions"><button type="button" class="btn btn-light" id="mlCancel">Cancelar</button><button type="submit" class="btn btn-primary" id="mlSave">Salvar malote</button></div></div></form></section></div>
+<div class="modal-backdrop hidden" id="rotTaskModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">ROTINA</p><h2 id="rotTaskTitle">Nova demanda</h2></div><button type="button" class="close-modal" id="rotTaskClose" aria-label="Fechar">×</button></div>
+<form id="rotTaskForm" class="rot-form" novalidate autocomplete="off">
+  <label class="rot-f"><span>Título</span><input id="rotTTitulo" type="text" maxlength="120" placeholder="O que precisa ser feito?"></label>
+  <label class="rot-f"><span>Descrição (opcional)</span><textarea id="rotTDesc" rows="3" maxlength="600"></textarea></label>
+  <div class="rot-row3">
+    <label class="rot-f"><span>Data</span><input id="rotTData" type="date" class="js-date"></label>
+    <label class="rot-f"><span>Hora (opcional)</span><input id="rotTHora" type="time"></label>
+    <label class="rot-f"><span>Prioridade</span><select id="rotTPrio"><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select></label>
+  </div>
+  <label class="rot-foco"><input type="checkbox" id="rotTFoco"> Marcar como foco do dia</label>
+  <div class="modal-actions rot-modal-actions"><button type="button" class="btn btn-light rot-del hidden" id="rotTaskDel">Excluir</button><span class="rot-spacer"></span><button type="button" class="btn btn-light" id="rotTaskCancel">Cancelar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></section></div>
+<div class="modal-backdrop hidden" id="rotNoteModal"><section class="modal"><div class="modal-head"><div><p class="eyebrow">ROTINA</p><h2 id="rotNoteHead">Nova anotação</h2></div><button type="button" class="close-modal" id="rotNoteClose" aria-label="Fechar">×</button></div>
+<form id="rotNoteForm" class="rot-form" novalidate autocomplete="off">
+  <label class="rot-f"><span>Título (opcional)</span><input id="rotNTitulo" type="text" maxlength="100"></label>
+  <label class="rot-f"><span>Anotação</span><textarea id="rotNTexto" rows="9" maxlength="5000" placeholder="Escreva aqui..."></textarea></label>
+  <div class="rot-f"><span>Cor</span><div class="rot-swatches">
+    <label class="rot-sw c-amarelo"><input type="radio" name="rotNCor" value="amarelo" checked><i></i><b>Amarelo</b></label>
+    <label class="rot-sw c-azul"><input type="radio" name="rotNCor" value="azul"><i></i><b>Azul</b></label>
+    <label class="rot-sw c-verde"><input type="radio" name="rotNCor" value="verde"><i></i><b>Verde</b></label>
+    <label class="rot-sw c-rosa"><input type="radio" name="rotNCor" value="rosa"><i></i><b>Rosa</b></label>
+    <label class="rot-sw c-cinza"><input type="radio" name="rotNCor" value="cinza"><i></i><b>Cinza</b></label></div></div>
+  <label class="rot-foco"><input type="checkbox" id="rotNPin"> Fixar no topo</label>
+  <div class="modal-actions rot-modal-actions"><button type="button" class="btn btn-light rot-del hidden" id="rotNoteDel">Excluir</button><span class="rot-spacer"></span><button type="button" class="btn btn-light" id="rotNoteCancel">Cancelar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></section></div>
 <div class="toast" id="toast"></div>
 <script src="exportar-excel.js?v=6"></script>
 <script src="exportar-pdf.js?v=2"></script>
@@ -170,6 +209,7 @@
 <script src="datepicker.js?v=1"></script>
 <script src="malote.js?v=5"></script>
 <script src="nota-recusa.js?v=2"></script>
+<script src="rotina.js?v=1"></script>
 <script src="logo-pdf.js?v=1"></script>
 <script src="script.js?v=19"></script>
 <script src="modulos.js?v=5"></script>

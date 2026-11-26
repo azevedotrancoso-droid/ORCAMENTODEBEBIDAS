@@ -12,15 +12,19 @@
   'use strict';
   var ICON = {
     orcamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M2 20h20"/></svg>',
+    rotina: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15.5l2 2 4-4"/></svg>',
     administrativo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg>'
   };
   var MODS = {
     orcamento: {name: 'Orçamento de Bebidas', sub: 'Gestão financeira', tag: 'Financeiro', home: 'dashboard', nav: 'mainNav', label: 'MENU PRINCIPAL', quickAdd: true,
       desc: 'Lançamentos de NF, orçamento trimestral, análise por categoria e relatórios em PDF e Excel.'},
     administrativo: {name: 'Administrativo', sub: 'Gestão administrativa', tag: 'Documentos', home: 'malote', nav: 'admNav', label: 'MENU ADMINISTRATIVO', quickAdd: false,
-      desc: 'Malote NF por semana do mês e Nota de Recusa e Devolução de mercadoria, com PDF.'}
+      desc: 'Malote NF por semana do mês e Nota de Recusa e Devolução de mercadoria, com PDF.'},
+    rotina: {name: 'Rotina', sub: 'Planejamento pessoal', tag: 'Produtividade', home: 'rotina-geral', nav: 'rotNav', label: 'MENU ROTINA', quickAdd: false,
+      desc: 'Visão geral do seu dia, demandas do dia, da semana e do mês, calendário e anotações.'}
   };
-  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'administrativo', recusa: 'administrativo'};
+  var PAGE_MOD = {dashboard: 'orcamento', lancamentos: 'orcamento', orcamento: 'orcamento', categorias: 'orcamento', relatorios: 'orcamento', malote: 'administrativo', recusa: 'administrativo', 'rotina-geral': 'rotina', 'rotina-dia': 'rotina', 'rotina-semana': 'rotina', 'rotina-mes': 'rotina', 'rotina-calendario': 'rotina', 'rotina-notas': 'rotina'};
+  var PAGE_LABEL = {'rotina-geral': 'Visão geral', 'rotina-dia': 'Demandas do dia', 'rotina-semana': 'Demandas da semana', 'rotina-mes': 'Demandas do mês', 'rotina-calendario': 'Calendário', 'rotina-notas': 'Anotações'};
   var KEY = 'ob-module', KEY_PAGES = 'ob-module-pages', CHOSEN = 'ob-hub-chosen';
   var cur = 'orcamento', curPage = 'dashboard', last = {}, user = null;
   /* Histórico (botão Voltar): depth = quantas entradas existem acima da raiz (a raiz é a seleção de módulos). */
@@ -148,6 +152,8 @@
     var m = PAGE_MOD[page];
     if (m && m !== cur) paint(m);
     baseNavigate(page);
+    if (PAGE_LABEL[page] && $('crumb')) $('crumb').textContent = PAGE_LABEL[page];
+    if (window.Rotina && page.indexOf('rotina-') === 0) window.Rotina.render(page);
     curPage = page;
     last[m || cur] = page;
     wr(KEY_PAGES, JSON.stringify(last));

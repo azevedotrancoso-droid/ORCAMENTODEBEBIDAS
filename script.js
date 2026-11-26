@@ -33,9 +33,9 @@ async function submitAuth(ev){ev.preventDefault();const email=$('authEmail').val
  catch(e){msg.textContent=/Invalid login/i.test(e.message)?'E-mail ou senha incorretos.':/already/i.test(e.message)?'Este e-mail já está cadastrado.':/Email not confirmed/i.test(e.message)?'Confirme seu e-mail antes de entrar.':e.message}
  finally{$('authSubmit').disabled=false}}
 async function onSession(session){
- if(!session){state.user=null;state.entries=[];if(window.Malote)Malote.reset();if(window.Modulos)Modulos.leave();$('appView').classList.add('hidden');$('authView').classList.remove('hidden');return}
+ if(!session){state.user=null;state.entries=[];if(window.Malote)Malote.reset();if(window.Rotina)Rotina.reset();if(window.Modulos)Modulos.leave();$('appView').classList.add('hidden');$('authView').classList.remove('hidden');return}
  state.user=session.user;$('userEmail').textContent=session.user.email;$('authView').classList.add('hidden');if(window.Modulos)Modulos.enter(session.user);else $('appView').classList.remove('hidden');
- try{const w=await db.rpc('orc_workspace_id');state.ownerId=(w&&w.data)||session.user.id;await loadData();renderAll();if(window.Malote)Malote.load()}catch(e){toast('Erro ao carregar os dados: '+e.message)}}
+ try{const w=await db.rpc('orc_workspace_id');state.ownerId=(w&&w.data)||session.user.id;await loadData();renderAll();if(window.Malote)Malote.load();if(window.Rotina)Rotina.load()}catch(e){toast('Erro ao carregar os dados: '+e.message)}}
 function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
 function dateFmt(v){if(!v)return '—';const d=new Date(v+'T12:00:00');return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR')}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

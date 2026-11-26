@@ -72,3 +72,11 @@ Para criar um módulo novo, veja o comentário no início de `modulos.js`.
 - **Ícones:** `icon-192/512` (padrão), `icon-maskable-192/512` (formato adaptável do Android) e `icon-monochrome-512` (ícone temático do Android 13+).
 - **Atualização:** quando há versão nova aparece a barra "Nova versão do aplicativo disponível. Atualizar". O app confere se há versão nova ao voltar para ele.
 - **Para publicar uma versão nova:** aumente o número em `CACHE_NAME` no `sw.js` (v19 → v20) e o `?v=` dos arquivos alterados no `index.html`.
+
+## Módulo Rotina
+Planejamento pessoal, com menu próprio: **Visão geral**, **Demandas do dia**, **Demandas da semana**, **Demandas do mês**, **Calendário** e **Anotações**.
+- **Visão geral:** data e hora ao vivo, como está o dia (progresso e próxima demanda), pendentes, concluídas e atrasadas, foco do dia, planejamento da semana e anotações recentes.
+- **Demandas:** título, descrição, data, hora, prioridade (alta, média, baixa) e "foco do dia". Marque como concluída no quadradinho; clique na demanda para editar ou excluir. Demandas pendentes de dias anteriores aparecem como "Atrasadas" no dia.
+- **Calendário:** mês inteiro com pontos de demandas pendentes e concluídas; clique no dia para ver e criar demandas.
+- **Anotações:** cartões coloridos (amarelo, azul, verde, rosa, cinza), fixar no topo, busca por texto.
+- **Banco de dados:** rode `rotina.sql` uma vez no SQL Editor do Supabase (tabelas `rot_demandas` e `rot_notas`, privadas de cada usuário). Sem isso o módulo funciona e salva só no aparelho, e avisa na tela.
